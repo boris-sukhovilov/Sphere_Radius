@@ -4,7 +4,7 @@ function TetrahedronRadius()
     R = 1000;
     numPoints = 4;
     
-    h = R*0.999;   % Расстояние от центра сферы до горизонтальных плоскостей, расположения точек
+    h = R*0.001;   % Расстояние от центра сферы до горизонтальных плоскостей, расположения точек
     h
     
     theta = pi / 4; % Угол между диаметральными плоскостями
@@ -30,7 +30,7 @@ function TetrahedronRadius()
 %     S0
 %     S
 
-    R_Sukhovilov = circumscribedSphereRadius_Sukhovilov(S);
+    R_Sukhovilov = SphereRadius_Sukhovilov(S);
     fprintf('Радиус описанной сферы, вычисленный по формуле Суховилова: %g\n', R_Sukhovilov);
 
     % Получим ребра тетраэдра
