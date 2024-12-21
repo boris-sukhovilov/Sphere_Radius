@@ -17,12 +17,12 @@ function SimplexRadius()
 
     points = generateRandomPointsInSolidAngle(R, numPoints, thetaRange, phiRange, sigma_form);
     
-    % Генерация матрицы расстояний
+    % Р“РµРЅРµСЂР°С†РёСЏ РјР°С‚СЂРёС†С‹ СЂР°СЃСЃС‚РѕСЏРЅРёР№
     [S, S0, sigma] = generateMatrixDistance(points, delta, type_distrib);
 %     S0
 %     S
 
     R_Sukhovilov = circumscribedSphereRadius_Sukhovilov(S);
-    fprintf('Радиус описанной сферы, вычисленный по формуле Суховилова: %g\n', R_Sukhovilov);
+    fprintf('Р Р°РґРёСѓСЃ РѕРїРёСЃР°РЅРЅРѕР№ СЃС„РµСЂС‹, РІС‹С‡РёСЃР»РµРЅРЅС‹Р№ РїРѕ С„РѕСЂРјСѓР»Рµ РЎСѓС…РѕРІРёР»РѕРІР°: %g\n', R_Sukhovilov);
 
 end

@@ -1,0 +1,18 @@
+function points = generateRandomPointsOnSphereInCentralAngle(n, R, Omega0)
+    % n - количество точек
+    % R - радиус сферы
+    % Omega0 - центральный угол для размещения точек
+
+    % Инициализация случайных точек на сфере в пределах центрального угла Omega0
+    points = randn(n, 3);
+    points = points ./ vecnorm(points, 2, 2) * R;
+
+    % Ограничение точек центральным углом Omega0
+    for i = 1:n
+        while acos(points(i, 3) / R) > Omega0 / 2
+            points(i, :) = randn(1, 3);
+            points(i, :) = points(i, :) / norm(points(i, :)) * R;
+        end
+    end
+    points = points';
+end
