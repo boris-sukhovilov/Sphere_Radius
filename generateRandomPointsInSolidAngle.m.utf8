@@ -1,4 +1,4 @@
-function points = generateRandomPointsInSolidAngle(R, numPoints, thetaRange, phiRange, sigma_form)
+function points = generateRandomPointsInSolidAngle(R, numPoints, thetaRange, phiRange, sigma_m)
     % R - радиус сферы
     % numPoints - количество точек для генерации
     % thetaRange - диапазон углов theta [theta_min, theta_max]
@@ -15,7 +15,7 @@ function points = generateRandomPointsInSolidAngle(R, numPoints, thetaRange, phi
     z = R * cos(phi);
 
     % Генерация случайных отклонений по закону Гаусса
-    deviations = normrnd(0, sigma_form, numPoints, 1);
+    deviations = normrnd(0, sigma_m, numPoints, 1);
 
     % Применение отклонений к координатам точек
     x = x .* (1 + deviations ./ R);
