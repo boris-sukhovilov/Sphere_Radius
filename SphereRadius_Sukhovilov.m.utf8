@@ -6,7 +6,10 @@ function [R, x, sigma_R] = SphereRadius_Sukhovilov(S, sigma, sigma_m)
     S2 = 0.5 * S.^2;
     rank_S2_0 = 4;
     [V, L, U] = svd(S2);
-%     V, L, U
+    V, L, U
+    
+%     L(3,3) = 0;
+%     L(4,4) = 0;
     
     singular_values = diag(L);
     tol = max(size(S)) * eps(max(singular_values)); % Порог для определения нулевых сингулярных чисел

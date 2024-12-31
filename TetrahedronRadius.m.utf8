@@ -2,30 +2,35 @@ function TetrahedronRadius()
     clc
 
     R = 1000;
-%     numPoints = 100;
+    numPoints = 4;
     
-    h = R*0.98;   % Расстояние от центра сферы до горизонтальных плоскостей, расположения точек
+    h = R*0.5;   % Расстояние от центра сферы до горизонтальных плоскостей, расположения точек
+%     h = R*0.98;   % Расстояние от центра сферы до горизонтальных плоскостей, расположения точек
 %     h = R*0.999;   % Расстояние от центра сферы до горизонтальных плоскостей, расположения точек
     h
     
     theta = pi / 4; % Угол между диаметральными плоскостями
 
     type_distrib = 1;
+%     delta = 0.;
+%     sigma_m  = 0.;
     delta = 0.1;
     sigma_m  = 1.;
     
     thetaRange = [0 2*pi];
-    phiRange = [0 pi/6];
+    phiRange = [0 pi/2];
+    % Расположение точек в недиаметральной плоскости
+%     phiRange = [pi/4 pi/4+pi/100];
     
     rng('shuffle');
 
-%     generate_type = 1;
-%     
-%     if generate_type == 0
-%         points = generateRandomPointsInSolidAngle(R, numPoints, thetaRange, phiRange, sigma_m);
-%     else
+    generate_type = 0;
+    
+    if generate_type == 0
+        points = generateRandomPointsInSolidAngle(R, numPoints, thetaRange, phiRange, sigma_m);
+    else
         points = generate_optim_tetrahedron_points(R, h, theta, sigma_m);
-%     end
+    end
 
     % Генерация матрицы расстояний
     [S, ~, sigma] = generateMatrixDistance(points, delta, type_distrib);
@@ -57,7 +62,10 @@ function TetrahedronRadius()
         fprintf('Metod 2 Radius not found!\n');
     end
     
-
+    [R3, sigma_R3] = SphereRadius_Sukhovilov3(R1, S, sigma, sigma_m);
+    fprintf('Радиус описанной сферы, вычисленный 3-м методом: %g\n', R3);
+    fprintf('RMSE of R: %g\n\n', sigma_R3);
+    
     % Получим ребра тетраэдра
     [a, b, c, a1, b1, c1] = getTetrahedronEdges(S);
 

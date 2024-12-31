@@ -1,0 +1,51 @@
+function eigenvectors = compute_eigenvectors(A)
+    % Размер матрицы
+    n = size(A, 1);
+
+    % Вычисление собственных чисел матрицы A
+    eigenvalues = eig(A);
+
+    % Инициализация матрицы для хранения собственных векторов
+    eigenvectors = zeros(n, n);
+
+    % Вычисление собственных векторов
+    for i = 1:n
+        % Собственное число Li(A)
+        Li = eigenvalues(i);
+
+        % Инициализация вектора Vi
+        Vi = zeros(n, 1);
+
+        for j = 1:n
+            % Минор Aj, полученный вычеркиванием j-ой строки и столбца
+            Aj = A;
+            Aj(j, :) = [];
+            Aj(:, j) = [];
+
+            % Собственные числа минора Aj
+            eigenvalues_minor = eig(Aj);
+
+            % Вычисление квадрата компоненты Vij по формуле Крамера
+            numerator = prod(Li - eigenvalues_minor);
+            denominator = prod(Li - eigenvalues([1:i-1, i+1:end]));
+            Vij_squared = numerator / denominator;
+
+            % Извлечение квадратного корня
+            Vi(j) = sqrt(Vij_squared);
+        end
+
+        % Нормализация собственного вектора
+        Vi = Vi / norm(Vi);
+
+        % Выбор знака для обеспечения ортогональности
+        for k = 1:i-1
+            if dot(eigenvectors(:, k), Vi) < 0
+                Vi = -Vi;
+            end
+        end
+
+        % Сохранение собственного вектора
+        eigenvectors(:, i) = Vi;
+    end
+end
+
