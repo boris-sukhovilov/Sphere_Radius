@@ -5,8 +5,7 @@ function SphereRadiusFromDistance()
     numPoints = 5;
     
     type_distrib = 1;
-%     delta = 0.;
-%     sigma_m  = 0.;
+    rng('shuffle');
     delta = 0.1;
     sigma_m  = 1.;
     
@@ -15,7 +14,6 @@ function SphereRadiusFromDistance()
     % Расположение точек в недиаметральной плоскости
 %     phiRange = [pi/4 pi/4+pi/100];
     
-    rng('shuffle');
 
     generate_type = 2;
     
@@ -44,7 +42,8 @@ function SphereRadiusFromDistance()
     rmin0 = R1 - 4*sigma_R; 
     rmax0 = R1 + 4*sigma_R;
     rmin0 = max([eps, rmin0]);
-    rmin0, rmax0
+    fprintf('rmin0:%g rmax0:%g\n', rmin0, rmax0);
+    
     
     % Минимальный размер интервала изоляции корня 
     d = 3*sqrt(sigma^2 + sigma_m^2)/1000;
