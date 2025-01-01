@@ -1,16 +1,9 @@
-function TetrahedronRadius()
+function SphereRadiusFromDistance()
     clc
 
     R = 1000;
-    numPoints = 6;
+    numPoints = 5;
     
-    h = R*0.5;   % Расстояние от центра сферы до горизонтальных плоскостей, расположения точек
-%     h = R*0.98;   % Расстояние от центра сферы до горизонтальных плоскостей, расположения точек
-%     h = R*0.999;   % Расстояние от центра сферы до горизонтальных плоскостей, расположения точек
-    h
-    
-    theta = pi / 4; % Угол между диаметральными плоскостями
-
     type_distrib = 1;
 %     delta = 0.;
 %     sigma_m  = 0.;
@@ -24,12 +17,19 @@ function TetrahedronRadius()
     
     rng('shuffle');
 
-    generate_type = 0;
+    generate_type = 2;
     
     if generate_type == 0
         points = generateRandomPointsInSolidAngle(R, numPoints, thetaRange, phiRange, sigma_m);
-    else
+    elseif generate_type == 1
+        h = R*0.5;   % Расстояние от центра сферы до горизонтальных плоскостей, расположения точек
+        %     h = R*0.98;   % Расстояние от центра сферы до горизонтальных плоскостей, расположения точек
+        h
+        theta = pi / 4; % Угол между диаметральными плоскостями
         points = generate_optim_tetrahedron_points(R, h, theta, sigma_m);
+    elseif generate_type == 2
+        h = R*cos(phiRange(2));
+        points = generate_sphere_points_on_isosceles_pyramid(numPoints, R, h, sigma_m);
     end
 
     % Генерация матрицы расстояний
@@ -37,7 +37,7 @@ function TetrahedronRadius()
 %     S0
 %     S
 
-    [R1, sigma_R] = SphereRadius_Sukhovilov(S, sigma, sigma_m);
+    [R1, sigma_R] = SphereRadius_Sukhovilov1(S, sigma, sigma_m);
     fprintf('Радиус описанной сферы, вычисленный 1-м методом: %g\n', R1);
     fprintf('RMSE of R: %g\n\n', sigma_R);
 
@@ -63,6 +63,10 @@ function TetrahedronRadius()
     [R3, sigma_R3] = SphereRadius_Sukhovilov3(R1, S, sigma, sigma_m);
     fprintf('Радиус описанной сферы, вычисленный 3-м методом: %g\n', R3);
     fprintf('RMSE of R: %g\n\n', sigma_R3);
+    
+    % СКО при оптимальном расположении точек на на всей поверхности сферы
+    sigma_Optim = sqrt(sigma^2/(2*numPoints^2)+sigma_m^2/numPoints);
+    fprintf('RMSE of R for optimal placement of points: %g\n', sigma_Optim);    
     
     % Получим ребра тетраэдра
     [a, b, c, a1, b1, c1] = getTetrahedronEdges(S);

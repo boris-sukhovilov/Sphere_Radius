@@ -1,7 +1,7 @@
 % ----------------------------------------------------------------------
 %  R = 1 / sqrt(sum(sum(pinv(S2))));
 % ----------------------------------------------------------------------
-function [R, sigma_R] = SphereRadius_Sukhovilov(S, sigma, sigma_m)
+function [R, sigma_R] = SphereRadius_Sukhovilov1(S, sigma, sigma_m)
     % Построение матрицы S2
     S2 = 0.5 * S.^2;
     rank0 = 4;
