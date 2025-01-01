@@ -2,7 +2,7 @@ function TetrahedronRadius()
     clc
 
     R = 1000;
-    numPoints = 4;
+    numPoints = 6;
     
     h = R*0.5;   % Расстояние от центра сферы до горизонтальных плоскостей, расположения точек
 %     h = R*0.98;   % Расстояние от центра сферы до горизонтальных плоскостей, расположения точек
@@ -37,11 +37,9 @@ function TetrahedronRadius()
 %     S0
 %     S
 
-    [R1, ~, sigma_R] = SphereRadius_Sukhovilov(S, sigma, sigma_m);
+    [R1, sigma_R] = SphereRadius_Sukhovilov(S, sigma, sigma_m);
     fprintf('Радиус описанной сферы, вычисленный 1-м методом: %g\n', R1);
     fprintf('RMSE of R: %g\n\n', sigma_R);
-%     x'
-%     1./sqrt(sum(x))
 
     rmin0 = R1 - 4*sigma_R; 
     rmax0 = R1 + 4*sigma_R;

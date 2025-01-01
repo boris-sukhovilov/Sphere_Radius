@@ -5,13 +5,13 @@ function [R, sigma_R] = SphereRadius_Sukhovilov3(R0, S, sigma, sigma_m)
     % Начальные приближения для координат точек и длин осей эллипсоида
     [cg] = CenterOfGravityCoordFromPairDistance(S);
     X0 = cg';
-    C0 = compute_center(X0, R0);
+    C0 = compute_center(X0);
     
     [X, C, R, cov_matrix] = optimize_sphere_points(n, R0, sigma_m, sigma, X0, C0, S);
-    X, C, R
+%     X, C, R
 %     cov_matrix
     
-    svd(cov_matrix)
+%     svd(cov_matrix)
    
     sigma_R = sqrt(cov_matrix(end,end));
 end
@@ -43,7 +43,10 @@ function [X, C, R, cov_matrix] = optimize_sphere_points(n, R0, sigma_m, sigma, X
 
     % Вычисление матрицы ковариации
 %     cov_matrix = inv(J' * J) * var(residual);
-    cov_matrix = (J' * J)\eye(length(params_opt))*var(residual);
+
+    GAUGE_FREEDOM = 6;
+    rank0 = length(params_opt) - GAUGE_FREEDOM;
+    cov_matrix = pseudo_inv((J' * J), rank0)*var(residual);
 end
 
 function [res, J] = residuals(params, n, sigma_m, sigma,S)
@@ -89,7 +92,7 @@ function [res, J] = residuals(params, n, sigma_m, sigma,S)
    
 end
 
-function C = compute_center(X, R)
+function C = compute_center(X)
     % X - матрица координат точек (n x 3)
     % R - радиус сферы
 
