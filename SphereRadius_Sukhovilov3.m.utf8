@@ -1,4 +1,4 @@
-function [R, sigma_R] = SphereRadius_Sukhovilov3(R0, S, sigma, sigma_m)
+function [R, R_confidence_intervals] = SphereRadius_Sukhovilov3(R0, S, sigma, sigma_m)
 
     n = size(S,1);
     
@@ -6,6 +6,13 @@ function [R, sigma_R] = SphereRadius_Sukhovilov3(R0, S, sigma, sigma_m)
     [cg] = CenterOfGravityCoordFromPairDistance(S);
     X0 = cg';
     C0 = compute_center(X0);
+    
+    r = 0;
+    for i = 1 : n
+        r = r + norm(cg(:,i)-C0);
+    end
+    r = r/n;    
+    r
     
     GAUGE_FREEDOM = 3;
     [X, R, cov_matrix] = optimize_sphere_points2(n, R0, sigma_m, sigma, X0, C0, S, GAUGE_FREEDOM);
@@ -16,7 +23,15 @@ function [R, sigma_R] = SphereRadius_Sukhovilov3(R0, S, sigma, sigma_m)
     
 %     svd(cov_matrix)
    
-    sigma_R = sqrt(cov_matrix(end,end));
+%     sigma_R = sqrt(cov_matrix(end,end));
+
+    % alpha - уровень значимости (например, 0.05 для 95% доверительного интервала)
+    % Для получения доверительных интервалов на уровне "3 сигма" (или 99.73% доверительный интервал), 
+    % уровень значимости alpha должен быть установлен таким образом, чтобы 99.73% распределения 
+    % находилось внутри интервала. Это означает, что alpha будет равен 1-0.9973=0.0027.
+    alpha = 0.0027;
+    [CI_lower, CI_upper] = confidence_intervals_ellipsoid([X(:); R], cov_matrix, alpha);
+    R_confidence_intervals = [CI_lower(end) CI_upper(end)];
 end
 
 function [X, C, R, cov_matrix] = optimize_sphere_points(n, R0, sigma_m, sigma, X0, C0, S, GAUGE_FREEDOM)

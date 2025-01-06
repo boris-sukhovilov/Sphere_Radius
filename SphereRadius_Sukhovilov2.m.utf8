@@ -172,8 +172,12 @@ function roots = find_roots(C, rmin0, rmax0, d)
     N = size(C,1);
 
     % Вычисление количества интервалов изоляции
-    n = ceil((rmax0 - rmin0) / d);
-
+    if d == 0
+        n = 0;
+    else
+        n = ceil((rmax0 - rmin0) / d);
+    end
+    
     % Инициализация вектора для хранения корней
     roots = [];
     options = optimset('Display', 'off');
@@ -185,7 +189,7 @@ function roots = find_roots(C, rmin0, rmax0, d)
         x2 = rmin0 + i * d;
 
         % Проверка знаков функции на границах интервала
-        if r_fun(x1,N,C) * r_fun(x2,N,C) < 0
+        if r_fun(x1,N,C) * r_fun(x2,N,C) <= 0
             % Вызов fzero для нахождения корня в интервале [x1, x2]
             root = fzero(@(r) r_fun(r,N,C), [x1 x2], options);
             % Сохранение найденного корня

@@ -3,7 +3,11 @@ clc
 
 sigma = 0.03/3;
 
-sigma_m = 0.0;
+sigma_m = 0.000001;
+
+r = 1;
+
+R0 = r+0.1*r;
 
 format long
 
@@ -90,32 +94,33 @@ disp('измеренные расстояния'); disp( num2str(s));
 
 % disp(['радиус по измеренным расстояниям   ',num2str(calculate_radius_Sukhovilov(ss))])
 
-    [R1, x, sigma_R] = SphereRadius_Sukhovilov(S, sigma, sigma_m);
+[R1, sigma_R] = SphereRadius_Sukhovilov1(S, sigma, sigma_m, R0);
     fprintf('Радиус описанной сферы, вычисленный 1-м методом: %g\n', R1);
     fprintf('RMSE of R: %g\n\n', sigma_R);
-%     x'
-%     1./sqrt(sum(x))
 
-    rmin0 = R1 - 3*sigma_R; 
-    rmax0 = R1 + 3*sigma_R;
-    rmin0 = max([eps, rmin0]);
-    rmin0, rmax0
+%     rmin0 = R1 - 4*sigma_R; 
+%     rmax0 = R1 + 4*sigma_R;
+%     rmin0 = max([eps, rmin0]);
+%     fprintf('rmin0:%g rmax0:%g\n', rmin0, rmax0);
     
-    % Минимальный размер интервала изоляции корня
-    d = 3*sqrt(sigma^2 + sigma_m^2)/1000;
-
-    [R2, sigma_R, sigma_max, status] = SphereRadius_Sukhovilov2(R1, S, sigma, sigma_m, rmin0, rmax0, d);
-    if status == 1
-        for i = 1 : length(R2)
-            fprintf('Metod 2 Radius: %g\n', R2(i));
-            fprintf('RMSE of R: %g\n', sigma_R(i));
-            fprintf('Upper bound for RMSE of R: %g\n', sigma_max(i));
-            sm = sensitivity_matrix(R2(i), S);
-            disp(sm);
-        end
-    else
-        fprintf('Metod 2 Radius not found!\n');
-    end
+    
+%     % Минимальный размер интервала изоляции корня 
+%     d = 3*sqrt(sigma^2 + sigma_m^2)/1000;
+% 
+%     [R2, sigma_R, sigma_max, status] = SphereRadius_Sukhovilov2(R1, S, sigma, sigma_m, rmin0, rmax0, d);
+%     if status == 1
+%         for i = 1 : length(R2)
+%             fprintf('Metod 2 Radius: %g\n', R2(i));
+%             fprintf('RMSE of R: %g\n', sigma_R(i));
+%             fprintf('Upper bound for RMSE of R: %g\n', sigma_max(i));
+%         end
+%     else
+%         fprintf('Metod 2 Radius not found!\n');
+%     end
+%     
+%     [R3, R_confidence_intervals] = SphereRadius_Sukhovilov3(1, S, sigma, sigma_m);
+%     fprintf('Радиус описанной сферы, вычисленный 3-м методом: %g\n', R3);
+%     fprintf('R3_confidence_intervals: %g\t%g\n\n', R_confidence_intervals);
 
 %     disp(['радиус по измеренным расстояниям (анонимная функция):',num2str(r(s))])
 
