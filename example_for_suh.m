@@ -1,137 +1,100 @@
 function example_for_suh()
-clc
+    clc
 
-sigma = 0.03/3;
+    numPoints = 4;
+    r = 1;
+    sigma = 0.03/3;
+    sigma_m = 0.1;
 
-sigma_m = 0.000001;
+    R0 = r+0.1*r;
 
-r = 1;
+    format long
 
-R0 = r+0.1*r;
+    % пример для Суховилова, что около полюсов располагать точки нежелательно
+    % малые ошибки измерений вызывают большую ошибку радиуса
+    % example_for_suh
 
-format long
+    r=@(d)1/sqrt( sum(sum( inv(  [0 d(1:3); d(1) 0 d(4:5); d(2) d(4) 0 d(6);...
+        d(3) d(5) d(6) 0].^2/2))));
 
-% пример для Суховилова, что около полюсов располагать точки нежелательно
-% малые ошибки измерений вызывают большую ошибку радиуса
-% example_for_suh
+    % исх данные расчётов
+    phi=0.0988; % Угол отклонения от полюса
+    % phi=0.2; % Угол отклонения от полюса
+    relerr=0.01*[1,1,0,0,0,1];     % задаём относительную погрешность измерений
 
-r=@(d)1/sqrt( sum(sum( inv(  [0 d(1:3); d(1) 0 d(4:5); d(2) d(4) 0 d(6);...
-    d(3) d(5) d(6) 0].^2/2))));
+    disp('пример, что малые ошибки измерений вызывают большую ошибку радиуса')
+    disp(['угол отклонения от полюса  ',num2str(phi)])
+    disp('относительные погрешности для измерений')
+    disp(relerr)
 
-% исх данные расчётов
-phi=0.0988; % Угол отклонения от полюса
-% phi=0.2; % Угол отклонения от полюса
-relerr=0.01*[1,1,0,0,0,1];     % задаём относительную погрешность измерений
+    % задаю координаты точек по предложению Суховилова
+    M1=[ sin(phi); 0;         cos(phi)]; % сев полюс направо
+    M2=[-sin(phi); 0;         cos(phi)];  % сев полюс налево
+    M3=[0;          sin(phi); -cos(phi)]; % юж полюс от нас
+    M4=[0;         -sin(phi); -cos(phi)]; % юж полюс к нам
+    %  расстояния между точками с маш погрешностью
+    s=zeros(1,6);
+    s(1)=sqrt(     sum(   (M1-M2).^2   )         );%12
+    s(2)=sqrt(     sum(   (M1-M3).^2   )         );%13
+    s(3)=sqrt(     sum(   (M1-M4).^2   )         );%14
+    s(4)=sqrt(     sum(   (M2-M3).^2   )         );%23
+    s(5)=sqrt(     sum(   (M2-M4).^2   )         );%24
+    s(6)=sqrt(     sum(   (M3-M4).^2   )         );%34
+    disp('"точные" расстояния'); disp( num2str(s));
 
-disp('пример, что малые ошибки измерений вызывают большую ошибку радиуса')
-disp(['угол отклонения от полюса  ',num2str(phi)])
-disp('относительные погрешности для измерений')
-disp(relerr)
+    disp(['радиус по "точным" расстояниям (анонимная функция):',num2str(r(s))])
 
-% задаю координаты точек по предложению Суховилова
-M1=[ sin(phi); 0;         cos(phi)]; % сев полюс направо
-M2=[-sin(phi); 0;         cos(phi)];  % сев полюс налево
-M3=[0;          sin(phi); -cos(phi)]; % юж полюс от нас
-M4=[0;         -sin(phi); -cos(phi)]; % юж полюс к нам
-%  расстояния между точками с маш погрешностью
-s=zeros(1,6);
-s(1)=sqrt(     sum(   (M1-M2).^2   )         );%12
-s(2)=sqrt(     sum(   (M1-M3).^2   )         );%13
-s(3)=sqrt(     sum(   (M1-M4).^2   )         );%14
-s(4)=sqrt(     sum(   (M2-M3).^2   )         );%23
-s(5)=sqrt(     sum(   (M2-M4).^2   )         );%24
-s(6)=sqrt(     sum(   (M3-M4).^2   )         );%34
-disp('"точные" расстояния'); disp( num2str(s));
+    % S = [0   s(1) s(2) s(3);
+    %     s(1) 0    s(4) s(5);
+    %     s(2) s(4) 0    s(6);
+    %     s(3) s(5) s(6) 0];
 
-disp(['радиус по "точным" расстояниям (анонимная функция):',num2str(r(s))])
-
-% S = [0   s(1) s(2) s(3);
-%     s(1) 0    s(4) s(5);
-%     s(2) s(4) 0    s(6);
-%     s(3) s(5) s(6) 0];
-
-% [U,S,V] = svd(S)
-% [V,D] = eig(S)
+    % [U,S,V] = svd(S)
+    % [V,D] = eig(S)
 
 
-% disp(['радиус по "точным" расстояниям   ',num2str(calculate_radius_Sukhovilov(S))])
+    % disp(['радиус по "точным" расстояниям   ',num2str(calculate_radius_Sukhovilov(S))])
 
-s=s.*(1+relerr); % измерения спогрешностью
+    s=s.*(1+relerr); % измерения спогрешностью
 
-% s(2) = 0.5*(s(2)+s(5));
-% s(5)=s(2);
-% s(1) = 0.5*(s(1)+s(6));
-% s(6)=s(1);
+    % s(2) = 0.5*(s(2)+s(5));
+    % s(5)=s(2);
+    % s(1) = 0.5*(s(1)+s(6));
+    % s(6)=s(1);
 
-S = [0    s(1) s(2) s(3);
-     s(1) 0    s(4) s(5);
-     s(2) s(4) 0    s(6);
-     s(3) s(5) s(6) 0];
+    S = [0    s(1) s(2) s(3);
+         s(1) 0    s(4) s(5);
+         s(2) s(4) 0    s(6);
+         s(3) s(5) s(6) 0];
 
-% tmp = (S(1,2) + S(3,4))/2;
-% % tmp = 0;
-% S(1,2) = tmp; 
-% S(3,4) = tmp; 
-% S(2,1) = tmp; 
-% S(4,3) = tmp; 
-% 
-% tmp = (S(1,4) + S(2,3))/2;
-% S(1,4) = tmp; 
-% S(2,3) = tmp; 
-% S(4,1) = tmp; 
-% S(3,2) = tmp; 
-% 
-% tmp = (S(1,3) + S(2,4))/2;
-% S(1,3) = tmp; 
-% S(2,4) = tmp; 
-% S(3,1) = tmp; 
-% S(4,2) = tmp; 
+    % tmp = (S(1,2) + S(3,4))/2;
+    % % tmp = 0;
+    % S(1,2) = tmp; 
+    % S(3,4) = tmp; 
+    % S(2,1) = tmp; 
+    % S(4,3) = tmp; 
+    % 
+    % tmp = (S(1,4) + S(2,3))/2;
+    % S(1,4) = tmp; 
+    % S(2,3) = tmp; 
+    % S(4,1) = tmp; 
+    % S(3,2) = tmp; 
+    % 
+    % tmp = (S(1,3) + S(2,4))/2;
+    % S(1,3) = tmp; 
+    % S(2,4) = tmp; 
+    % S(3,1) = tmp; 
+    % S(4,2) = tmp; 
 
-% [U,S,V] = svd(ss)
-% [V,D] = eig(ss)
+    % [U,S,V] = svd(ss)
+    % [V,D] = eig(ss)
 
-disp('измеренные расстояния'); disp( num2str(s));
+    disp('измеренные расстояния'); disp( num2str(s));
 
-% disp(['радиус по измеренным расстояниям   ',num2str(calculate_radius_Sukhovilov(ss))])
+    calc_Radius(S, sigma, sigma_m, R0);
 
-[R1, sigma_R] = SphereRadius_Sukhovilov1(S, sigma, sigma_m, R0);
-    fprintf('Радиус описанной сферы, вычисленный 1-м методом: %g\n', R1);
-    fprintf('RMSE of R: %g\n\n', sigma_R);
-
-%     rmin0 = R1 - 4*sigma_R; 
-%     rmax0 = R1 + 4*sigma_R;
-%     rmin0 = max([eps, rmin0]);
-%     fprintf('rmin0:%g rmax0:%g\n', rmin0, rmax0);
-    
-    
-%     % Минимальный размер интервала изоляции корня 
-%     d = 3*sqrt(sigma^2 + sigma_m^2)/1000;
-% 
-%     [R2, sigma_R, sigma_max, status] = SphereRadius_Sukhovilov2(R1, S, sigma, sigma_m, rmin0, rmax0, d);
-%     if status == 1
-%         for i = 1 : length(R2)
-%             fprintf('Metod 2 Radius: %g\n', R2(i));
-%             fprintf('RMSE of R: %g\n', sigma_R(i));
-%             fprintf('Upper bound for RMSE of R: %g\n', sigma_max(i));
-%         end
-%     else
-%         fprintf('Metod 2 Radius not found!\n');
-%     end
-%     
-%     [R3, R_confidence_intervals] = SphereRadius_Sukhovilov3(1, S, sigma, sigma_m);
-%     fprintf('Радиус описанной сферы, вычисленный 3-м методом: %g\n', R3);
-%     fprintf('R3_confidence_intervals: %g\t%g\n\n', R_confidence_intervals);
-
-%     disp(['радиус по измеренным расстояниям (анонимная функция):',num2str(r(s))])
-
-    % Получим ребра тетраэдра
-    [a, b, c, a1, b1, c1] = getTetrahedronEdges(S);
-    
-    % Вычисление радиуса через определитель Кэли-Менгера: https://ru.wikipedia.org/wiki/Симплекс
-    R_Cayley_Menger = circumscribedSphereRadius_Cayley_Menger(a, b, c, a1 , b1, c1);
-    fprintf('Радиус описанной сферы, вычисленный через определители Кэли-Менгера: %g\n', R_Cayley_Menger);
-
-    R_Grelle = circumscribedSphereRadius_Grelle(a, b, c, a1, b1, c1);
-    fprintf('Радиус описанной сферы, вычисленный по формуле Grelle: %g\n', R_Grelle);
+    % СКО при оптимальном расположении точек на на всей поверхности сферы
+    sigma_Optim = sqrt(sigma^2/(2*numPoints^2)+sigma_m^2/numPoints);
+    fprintf('RMSE of R for optimal placement of points: %g\n\n', sigma_Optim);    
 
 end

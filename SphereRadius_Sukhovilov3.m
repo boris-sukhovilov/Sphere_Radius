@@ -7,12 +7,12 @@ function [R, R_confidence_intervals] = SphereRadius_Sukhovilov3(R0, S, sigma, si
     X0 = cg';
     C0 = compute_center(X0);
     
-    r = 0;
-    for i = 1 : n
-        r = r + norm(cg(:,i)-C0);
-    end
-    r = r/n;    
-    r
+%     r = 0;
+%     for i = 1 : n
+%         r = r + norm(cg(:,i)-C0);
+%     end
+%     r = r/n;    
+%     r
     
     GAUGE_FREEDOM = 3;
     [X, R, cov_matrix] = optimize_sphere_points2(n, R0, sigma_m, sigma, X0, C0, S, GAUGE_FREEDOM);

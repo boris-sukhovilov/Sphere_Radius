@@ -1,16 +1,18 @@
 function SphereRadiusFromDistance()
     clc
 
+    format long
+    
     R = 1000;
     numPoints = 4;
     
     rng('shuffle');
     
-%     delta = eps*R;
-%     delta_m = eps*R;
+    delta = eps(R);
+    delta_m = eps(R);
 
-    delta = .000000000000001;
-    delta_m = 0;
+%     delta = 1;
+%     delta_m = 1;
     
     sigma  = delta/3.;
     sigma_m  = delta_m/3.;
@@ -22,7 +24,7 @@ function SphereRadiusFromDistance()
     % Диапазон азимутального угла, измеряемый в горизонтальной плоскости
     phiRange = [0 2*pi];
     % Диапазон полярного угла (угла склонения). Это угол между радиус-вектором точки и вертикальной осью
-    thetaRange = [0 pi/6];
+    thetaRange = [0 pi/4];
     
     % Расположение точек в недиаметральной плоскости
     % thetaRange = [pi/4 pi/4+pi/100];
@@ -66,59 +68,13 @@ function SphereRadiusFromDistance()
 %     S(2,4) = 51.;  S(4,2) = S(2,4);
 %     S(3,4) = 43.;  S(4,3) = S(3,4);
     
-    [R1, sigma_R] = SphereRadius_Sukhovilov1(S, sigma, sigma_m, R0);
-    fprintf('Method 1 Radius: %g\n', R1);
-    fprintf('RMSE of R1: %g\n\n', sigma_R);
-
-%     rmin0 = R1 - 3*sigma_R; 
-%     rmax0 = R1 + 3*sigma_R;
-%     rmin0 = max([eps, rmin0]);
-%     fprintf('rmin0:%g rmax0:%g\n', rmin0, rmax0);
-%     
-%     
-%     % Минимальный размер интервала изоляции корня 
-%     d = 3*sqrt(sigma^2 + sigma_m^2)/1000;
-% 
-%     [R2, sigma_R, sigma_max, status] = SphereRadius_Sukhovilov2(R1, S, sigma, sigma_m, rmin0, rmax0, d);
-%     if status == 1
-%         for i = 1 : length(R2)
-%             fprintf('Metod 2 Radius: %g\n', R2(i));
-%             fprintf('RMSE of R2: %g\n', sigma_R(i));
-%             fprintf('Upper bound for RMSE of R: %g\n', sigma_max(i));
-%         end
-%     else
-%         fprintf('Metod 2 Radius not found!\n');
-%     end
+    calc_Radius(S, sigma, sigma_m, R0);
     
-%     [R3, R_confidence_intervals] = SphereRadius_Sukhovilov3(R1, S, sigma, sigma_m);
-%     fprintf('Metod 3 Radius: %g\n', R3);
-%     fprintf('R3_confidence_intervals: %g\t%g\n\n', R_confidence_intervals);
-%     
-%     % СКО при оптимальном расположении точек на на всей поверхности сферы
-%     sigma_Optim = sqrt(sigma^2/(2*numPoints^2)+sigma_m^2/numPoints);
-%     fprintf('RMSE of R for optimal placement of points: %g\n\n', sigma_Optim);    
-    
-    % Получим ребра тетраэдра
-    [a, b, c, a1, b1, c1] = getTetrahedronEdges(S);
-    fprintf('a: %g\tb: %g\tc: %g\n', a,b,c);
-    fprintf('a1: %g\tb1: %g\tc1: %g\n', a1,b1,c1);
-    - a^2/2 - b^2/2 + c^2/2
-    - a^2/2 + b^2/2 - c^2/2
-      a^2/2 - b^2/2 - c^2/2
-      a^2/2 + b^2/2 + c^2/2
-
-    % Вычисление радиуса сферы, описывающей тетраэдр через определитель Кэли-Менгера
-    R_Cayley_Menger = circumscribedSphereRadius_Cayley_Menger(a, b, c, a1 , b1, c1);
-    fprintf('Радиус описанной сферы, вычисленный через определители Кэли-Менгера: %g\n', R_Cayley_Menger);
-    
-    % Вычисление квадрата радиуса сферы, описывающей тетраэдр
-    % In 1752 Euler gave in effect, the following expression for V
-    % In 1821 Crelle was published formula for R
-    R_Grelle = circumscribedSphereRadius_Grelle(a, b, c, a1, b1, c1);
-    fprintf('Радиус описанной сферы, вычисленный по формуле Grelle: %g\n', R_Grelle);
-
-    R_Carnot = circumscribedSphereRadius_Carnot(a, b, c, a1, b1, c1);
-    fprintf('Радиус описанной сферы, вычисленный по формуле Carnot: %g\n', R_Carnot);
+    if generate_type == 1  % tetrahedron
+        % СКО при оптимальном расположении точек на на всей поверхности сферы
+        sigma_Optim = sqrt(sigma^2/(2*numPoints^2)+sigma_m^2/numPoints);
+        fprintf('RMSE of R for optimal placement of points: %g\n\n', sigma_Optim);
+    end
     
 end
 

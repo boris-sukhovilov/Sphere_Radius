@@ -4,7 +4,7 @@
 % In 1752 Euler gave in effect, the following expression for V
 % In 1821 Crelle was published formula for R
 % -------------------------------------------------------------------------------------
-function R = circumscribedSphereRadius_Grelle(a, b, c, a1, b1, c1)
+function R = SphereRadius_Euler_Grelle(a, b, c, a1, b1, c1)
     % a, b, c - длины ребер тетраэдра между вершинами 1-2, 1-3, 1-4
     % a1, b1, c1 - длины противолежащих ребер тетраэдра между вершинами 3-4, 2-4, 2-3
     
