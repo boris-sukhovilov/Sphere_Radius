@@ -3,13 +3,13 @@ function [center, radius, iterations] = FitUsingLengths(points, maxIterations, i
         epsilon = 0;
     end
 
-    % Количество точек
+    % Number of points
     numPoints = size(points, 1);
 
-    % Вычисление среднего значения точек
+    % Calculating the average value of points
     average = mean(points, 1);
 
-    % Начальное предположение для центра
+    % Initial guess for the center
     if initialCenterIsAverage
         center = average;
     else
@@ -20,10 +20,10 @@ function [center, radius, iterations] = FitUsingLengths(points, maxIterations, i
     iterations = 0;
 
     for iteration = 1:maxIterations
-        % Обновление итераций
+        %Updating iterations
         current = center;
 
-        % Вычисление среднего L, dL/da, dL/db, dL/dc
+        % Calculation of average L, dL/da, dL/db, dL/dc
         lenAverage = 0;
         derLenAverage = zeros(1, 3);
         for i = 1:numPoints

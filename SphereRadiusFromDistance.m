@@ -8,48 +8,51 @@ function SphereRadiusFromDistance()
     
     rng('shuffle');
     
-    delta = eps(R);
-    delta_m = eps(R);
+%     delta = eps(R);
+%     delta_m = eps(R);
 
-%     delta = 1;
-%     delta_m = 1;
+    delta = 1;
+    delta_m = 1;
     
     sigma  = delta/3.;
     sigma_m  = delta_m/3.;
     
-    % Приближенное значение оцениваемого радиуса
-    % Нужно для вычисления финального ранга измеренной матрицы квадратов расстояний
+    % Approximate value of the estimated radius
+    % Participates in the calculation of the final rank of the measured matrix of squared distances
     R0 = R+0.1*R;
     
-    % Диапазон азимутального угла, измеряемый в горизонтальной плоскости
+    % Azimuth angle range measured in the horizontal plane
     phiRange = [0 2*pi];
-    % Диапазон полярного угла (угла склонения). Это угол между радиус-вектором точки и вертикальной осью
-    thetaRange = [0 pi/4];
+    % Polar angle range. This is the angle between the radius vector of the point and the vertical axis.
+    thetaRange = [0 pi/8];
     
-    % Расположение точек в недиаметральной плоскости
+    % Location of points in a non-diametrical plane
     % thetaRange = [pi/4 pi/4+pi/100];
     
-    % Тип симплекса
-    % 0 - симплекс составлен из точек, расположенных на часть сферы в диапазонах азимутального и полярного углов
-    % 1 - симплекс представляет тетраэдр (tetrahedron) с попарно равными противоположными ребрами
-    % 2 - симплекс представляет равнобедренную пирамиду (isosceles pyramid)
-    generate_type = 1;
+    % Simplex type
+    % 0 - the simplex is composed of points located on a part of a sphere in the ranges of azimuthal and polar angles
+    % 1 - simplex is a tetrahedron with pairs of equal opposite edges
+    % 2 - the simplex is an isosceles pyramid
+    generate_type = 0;
     
     if generate_type == 0
-%         points = generateRandomPointsInSolidAngle(R, numPoints, thetaRange, phiRange, sigma_m);
         points = generateRandomPointsInSolidAngle(R, numPoints, phiRange, thetaRange, sigma_m);
+        
     elseif generate_type == 1
-        h = R*0.5;   % Расстояние от центра сферы до горизонтальных плоскостей, расположения точек
-%           h = R*0.98;   % Расстояние от центра сферы до горизонтальных плоскостей, расположения точек
-        h
-        theta = pi / 2; % Угол между диаметральными плоскостями
+        % Distance from the center of the sphere to the horizontal planes, locations of points        
+        h = R*0.998;
+%         h = R*0.5; 
+        fprintf('Distance from the center of the sphere to the horizontal planes, locations of points:%g\n', h);
+        
+        theta = pi / 4; % Angle between diametrical planes
         points = generate_optim_tetrahedron_points(R, h, theta, sigma_m);
+        
     elseif generate_type == 2
         h = R*cos(thetaRange(2));
         points = generate_sphere_points_on_isosceles_pyramid(numPoints, R, h, sigma_m);
     end
 
-    % Генерация матрицы расстояний
+    % Generating a distance matrix
     [S, ~] = generateMatrixDistance(points, sigma);
 %     S0
 %     S
@@ -71,7 +74,7 @@ function SphereRadiusFromDistance()
     calc_Radius(S, sigma, sigma_m, R0);
     
     if generate_type == 1  % tetrahedron
-        % СКО при оптимальном расположении точек на на всей поверхности сферы
+        % RMSE of R for optimal placement of points on the entire surface of the sphere
         sigma_Optim = sqrt(sigma^2/(2*numPoints^2)+sigma_m^2/numPoints);
         fprintf('RMSE of R for optimal placement of points: %g\n\n', sigma_Optim);
     end

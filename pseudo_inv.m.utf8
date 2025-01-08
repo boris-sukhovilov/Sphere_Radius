@@ -6,7 +6,7 @@ function pseudo_inv_matrix = pseudo_inv(matrix, rank0)
     singular_values = diag(L);
     
     % calculating the final rank of a matrix
-    tol = max(size(matrix)) * eps(max(singular_values)); % Ïîğîã äëÿ îïğåäåëåíèÿ íóëåâûõ ñèíãóëÿğíûõ ÷èñåë
+    tol = max(size(matrix)) * eps(max(singular_values)); % ĞŸĞ¾Ñ€Ğ¾Ğ³ Ğ´Ğ»Ñ Ğ¾Ğ¿Ñ€ĞµĞ´ĞµĞ»ĞµĞ½Ğ¸Ñ Ğ½ÑƒĞ»ĞµĞ²Ñ‹Ñ… ÑĞ¸Ğ½Ğ³ÑƒĞ»ÑÑ€Ğ½Ñ‹Ñ… Ñ‡Ğ¸ÑĞµĞ»
     rank_f = sum(singular_values > tol);
     rank_f = min([rank_f rank0]);
 %     rank_f
