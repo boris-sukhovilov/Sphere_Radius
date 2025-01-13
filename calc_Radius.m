@@ -17,10 +17,10 @@ function calc_Radius(S, sigma, sigma_m, R0)
     d = 3*sqrt(sigma^2 + sigma_m^2)/1000;
 
     tic
-    [R2, sigma_R, sigma_max, status] = SphereRadius_Sukhovilov2(R0, S, sigma, sigma_m, rmin0, rmax0, d);
+    [R2, sigma_R, sigma_upper_bound, status] = SphereRadius_Sukhovilov2(R0, S, sigma, sigma_m, rmin0, rmax0, d);
     if status == 1
         for i = 1 : length(R2)
-%             fprintf('Metod 2: Radius= %g\tRMSE of R2= %g\tUpper bound for RMSE of R: %g\n', R2(i), sigma_R(i), sigma_max(i));
+            fprintf('Metod 2: Radius= %g\tRMSE of R2= %g\tUpper bound for RMSE of R: %g\n', R2(i), sigma_R(i), sigma_upper_bound(i));
             fprintf('Metod 2: Radius= %g\tRMSE of R2= %g', R2(i), sigma_R(i));
         end
     else
@@ -83,6 +83,7 @@ function calc_Radius(S, sigma, sigma_m, R0)
     fprintf('Calculating the radius of a sphere circumscribing a tetrahedron using the Euler and Grelle formulas: %g\n', R_Euler_Grelle);
 
     % Calculating the radius of a sphere circumscribing a tetrahedron using Carnot formula
+    % In Carnot, the edges c and c1 are swapped
     R_Carnot = SphereRadius_Carnot(a, b, c1, a1, b1, c);
     fprintf('Calculating the radius of a sphere circumscribing a tetrahedron using Carnot formula: %g\n', R_Carnot);
     

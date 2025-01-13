@@ -1,14 +1,11 @@
 function example_for_suh()
     clc
 
-    numPoints = 4;
     r = 1;
     sigma = 0.03/3;
     sigma_m = 0.1;
 
     R0 = r+0.1*r;
-
-    format long
 
     % пример для Суховилова, что около полюсов располагать точки нежелательно
     % малые ошибки измерений вызывают большую ошибку радиуса
@@ -40,22 +37,12 @@ function example_for_suh()
     s(4)=sqrt(     sum(   (M2-M3).^2   )         );%23
     s(5)=sqrt(     sum(   (M2-M4).^2   )         );%24
     s(6)=sqrt(     sum(   (M3-M4).^2   )         );%34
+    
     disp('"точные" расстояния'); disp( num2str(s));
 
     disp(['радиус по "точным" расстояниям (анонимная функция):',num2str(r(s))])
-
-    % S = [0   s(1) s(2) s(3);
-    %     s(1) 0    s(4) s(5);
-    %     s(2) s(4) 0    s(6);
-    %     s(3) s(5) s(6) 0];
-
-    % [U,S,V] = svd(S)
-    % [V,D] = eig(S)
-
-
-    % disp(['радиус по "точным" расстояниям   ',num2str(calculate_radius_Sukhovilov(S))])
-
-    s=s.*(1+relerr); % измерения спогрешностью
+    
+    s=s.*(1+relerr); % измерения с погрешностью
 
     % s(2) = 0.5*(s(2)+s(5));
     % s(5)=s(2);
@@ -92,9 +79,5 @@ function example_for_suh()
     disp('измеренные расстояния'); disp( num2str(s));
 
     calc_Radius(S, sigma, sigma_m, R0);
-
-    % СКО при оптимальном расположении точек на на всей поверхности сферы
-    sigma_Optim = sqrt(sigma^2/(2*numPoints^2)+sigma_m^2/numPoints);
-    fprintf('RMSE of R for optimal placement of points: %g\n\n', sigma_Optim);    
 
 end
