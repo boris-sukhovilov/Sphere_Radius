@@ -1,7 +1,8 @@
-% -----------------------------------------------------------------------------------------
-% Calculating the radius of a sphere circumscribing a tetrahedron using the Carnot method
+% --------------------------------------------------------------------------------
+% Calculating the radius of a sphere circumscribing a tetrahedron using 
+% the Carnot method
 % https://archive.org/details/jstor-2973351/page/n1/mode/2up
-% ------------------------------------------------------------------------------------------
+% --------------------------------------------------------------------------------
 function R = SphereRadius_Carnot(a, b, c, a1, b1, c1)
     % a, b, c - lengths of the edges of the tetrahedron between vertices 1-2, 1-3, 2-3
     % a1, b1, c1 - lengths of the opposite edges of the tetrahedron between vertices 3-4, 2-4, 1-4  

@@ -1,5 +1,6 @@
 % -------------------------------------------------------------------------------------
-% Вычисление квадрата радиуса сферы, описывающей тетраэдр
+% Calculating the radius of a sphere circumscribing a tetrahedron using 
+% the Euler, Grelle method
 % https://archive.org/details/jstor-2973351/page/n1/mode/2up
 % In 1752 Euler gave in effect, the following expression for V
 % We use this relation in form Killing and Hovestadt state 
