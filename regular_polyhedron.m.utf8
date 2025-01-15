@@ -81,12 +81,6 @@ function points = generateIcosahedron(R)
                   phi, 0, 1; phi, 0, -1; -phi, 0, 1; -phi, 0, -1] / sqrt(1 + phi^2);
 end
 
-function R = radius_platonic_solids(S)
-    numPoints = size(S,1);
-    S2 = 0.5*S.*S;
-    R = sqrt(sum(sum(S2)))/numPoints;
-end
-
 function [points, S] = form_deviation(points, R, sigma, sigma_m)
     numPoints = size(points, 1);
     

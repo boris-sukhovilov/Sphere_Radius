@@ -9,50 +9,42 @@ function calc_Radius(S, sigma, sigma_m, R0)
     [R1, sigma_R] = SphereRadius_Sukhovilov1(S, sigma, sigma_m, R0);
     fprintf('\tRadius= %g\tRMSE of R1: %g\tElapsed time =%g\n', R1, sigma_R, toc);
 
-    tic
-    fprintf('Metod 2:\n');
-    rmin0 = R0 - 0.15*R0;
-    rmax0 = R0 + 0.15*R0;
-    rmin0 = max([eps, rmin0]);
-    fprintf('root search range: [%g %g]\n', rmin0, rmax0);
-    % Minimum root isolation interval size
-%     d = max([eps(R0) 3*sqrt(sigma^2 + sigma_m^2)/1000]);
-    d = (rmax0 - rmin0)/1000;
-    [R2, sigma_R, sigma_upper_bound, status] = SphereRadius_Sukhovilov2(R0, S, sigma, sigma_m, rmin0, rmax0, d);
-    if status == 1
-        for i = 1 : length(R2)
-%             fprintf('Metod 2: Radius= %g\tRMSE of R2= %g\tUpper bound for RMSE of R: %g\n', R2(i), sigma_R(i), sigma_upper_bound(i));
-            fprintf('\tRadius= %g\tRMSE of R2= %g\n', R2(i), sigma_R(i));
-        end
-    else
-        fprintf('Metod 2 Radius not found!');
-    end
-    fprintf('\tElapsed time:%g\n', toc);
-
-    tic
-    fprintf('Metod 3:\n');
-    [R3, R_confidence_intervals] = SphereRadius_Sukhovilov3(R0, S, sigma, sigma_m);
-    fprintf('\tRadius= %g', R3);
-    if numPoints > 4
-        fprintf('\tconfidence_intervals=[%g %g]', R_confidence_intervals);
-    end
-    fprintf('\tElapsed time= %g\n', toc);
-         
 %     tic
-%     [R33, R_confidence_intervals] = SphereRadius_Sukhovilov33(R0, S, sigma, sigma_m);
-%     fprintf('Metod 33: Radius= %g', R33);
+%     fprintf('Metod 2:\n');
+%     rmin0 = R0 - 0.15*R0;
+%     rmax0 = R0 + 0.15*R0;
+%     rmin0 = max([eps, rmin0]);
+%     fprintf('root search range: [%g %g]\n', rmin0, rmax0);
+%     % Minimum root isolation interval size
+% %     d = max([eps(R0) 3*sqrt(sigma^2 + sigma_m^2)/1000]);
+%     d = (rmax0 - rmin0)/1000;
+%     [R2, sigma_R, sigma_upper_bound, status] = SphereRadius_Sukhovilov2(R0, S, sigma, sigma_m, rmin0, rmax0, d);
+%     if status == 1
+%         for i = 1 : length(R2)
+% %             fprintf('Metod 2: Radius= %g\tRMSE of R2= %g\tUpper bound for RMSE of R: %g\n', R2(i), sigma_R(i), sigma_upper_bound(i));
+%             fprintf('\tRadius= %g\tRMSE of R2= %g\n', R2(i), sigma_R(i));
+%         end
+%     else
+%         fprintf('Metod 2 Radius not found!');
+%     end
+%     fprintf('\tElapsed time:%g\n', toc);
+
+%     tic
+%     fprintf('Metod 3:\n');
+%     [R3, R_confidence_intervals] = SphereRadius_Sukhovilov3(R0, S, sigma, sigma_m);
+%     fprintf('\tRadius= %g', R3);
 %     if numPoints > 4
 %         fprintf('\tconfidence_intervals=[%g %g]', R_confidence_intervals);
 %     end
 %     fprintf('\tElapsed time= %g\n', toc);
-             
+         
     % Initial approximations for point coordinates
     [cg] = CenterOfGravityCoordFromPairDistance(S);
     
     tic
     % https://www.geometrictools.com/Documentation/LeastSquaresFitting.pdf (5.1)
     % https://www.geometrictools.com/GTE/Mathematics/ApprSphere3.h
-    fprintf('Metod FitUsingLengths (David Eberly)\n');
+    fprintf('Metod 4: (FitUsingLengths David Eberly)\n');
     maxIterations = 100;
     initialCenterIsAverage = 1;
     epsilon = eps(R0);
@@ -61,14 +53,14 @@ function calc_Radius(S, sigma, sigma_m, R0)
     
     fprintf('\nAlgebraic methods\n');
     
-    % https://www.mathworks.com/matlabcentral/fileexchange/34129-sphere-fit-least-squared
-    fprintf('Metod 5:\n');
-    [~, R5] = sphereFit(cg');
+    % https://www.geometrictools.com/GTE/Mathematics/ApprSphere3.h
+    fprintf('Metod 5: (FitUsingSquaredLengths David Eberly)\n');
+    [~, R5] = FitUsingSquaredLengths(cg');
     fprintf('\tRadius= %g\n', R5);
     
-    % https://www.geometrictools.com/GTE/Mathematics/ApprSphere3.h
-    fprintf('Metod FitUsingSquaredLengths (David Eberly)\n');
-    [~, R6] = FitUsingSquaredLengths(cg');
+    % https://www.mathworks.com/matlabcentral/fileexchange/34129-sphere-fit-least-squared
+    fprintf('Metod 6:\n');
+    [~, R6] = sphereFit(cg');
     fprintf('\tRadius= %g\n', R6);
     
     % Sumith YD, "Fast Geometric Fit Algorithm for Sphere Using Exact Solution" https://arxiv.org/pdf/1506.02776

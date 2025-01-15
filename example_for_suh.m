@@ -79,5 +79,7 @@ function example_for_suh()
     disp('измеренные расстояния'); disp( num2str(s));
 
     calc_Radius(S, sigma, sigma_m, R0);
+    
+    fprintf('Radius platonic solids = %g\n', radius_platonic_solids(S));
 
 end

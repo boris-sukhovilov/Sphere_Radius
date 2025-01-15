@@ -4,14 +4,15 @@ function SphereRadiusFromDistance()
     format long
     
     R = 1000;
-    numPoints = 4;
+    numPoints = 10;
     
     rng('shuffle');
     
 %     delta = eps(R);
 %     delta_m = eps(R);
+%     delta_m = 0;
 
-    delta = 1;
+    delta = 50;
     delta_m = 1;
     
     sigma  = delta/3.;
@@ -24,7 +25,7 @@ function SphereRadiusFromDistance()
     % Azimuth angle range measured in the horizontal plane
     phiRange = [0 2*pi];
     % Polar angle range. This is the angle between the radius vector of the point and the vertical axis.
-    thetaRange = [0 pi/2];
+    thetaRange = [0 pi/4];
     
     % Location of points in a non-diametrical plane
     % thetaRange = [pi/4 pi/4+pi/100];
@@ -40,11 +41,11 @@ function SphereRadiusFromDistance()
         
     elseif generate_type == 1
         % Distance from the center of the sphere to the horizontal planes, locations of points        
-        h = R*0.998;
-%         h = R*0.5; 
+%         h = R*0.998;
+        h = R*0.5; 
         fprintf('Distance from the center of the sphere to the horizontal planes, locations of points:%g\n', h);
         
-        theta = pi / 4; % Angle between diametrical planes
+        theta = pi / 2; % Angle between diametrical planes
         points = generate_optim_tetrahedron_points(R, h, theta, sigma_m);
         
     elseif generate_type == 2
@@ -56,6 +57,10 @@ function SphereRadiusFromDistance()
     [S, ~] = generateMatrixDistance(points, sigma);
 %     S0
 %     S
+
+    if generate_type == 1
+        fprintf('Radius platonic solids (Tetrahedron)= %g\n', radius_platonic_solids(S));
+    end
 
     % Tennis ball
 %     R0 = 65;
