@@ -24,30 +24,22 @@ s=0.5*[0     a^2    b^2   c^2
        c^2   b^2    a^2   0  ];
 
 [V, eigen_values] = eig(s);
-
 V
-   
-% eigen_values = eig(s);
-simplify(eigen_values)
 
-det(s)
-simplify(det(s))
+ev = diag(eigen_values);
+ev
+   
+% det(s)
+% simplify(det(s))
 
 inv_s=inv(s);
-inv_s
+% inv_s
 
 R=simplify(1/sqrt(bb'*inv_s*bb));
 R
 
-R2 = simplify(1/(bb'*inv_s*bb));
-R2
-
 x = simplify(inv_s*bb);
 x
-
-[V,D] = eig(s)
-
-% eig(inv_s)
 
 r = simplify(sqrt(1/sum(x)));
 r

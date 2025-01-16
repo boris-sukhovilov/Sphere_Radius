@@ -4,16 +4,18 @@ function SphereRadiusFromDistance()
     format long
     
     R = 1000;
-    numPoints = 10;
+    numPoints = 4;
     
     rng('shuffle');
     
 %     delta = eps(R);
 %     delta_m = eps(R);
+
+%     delta = 0;
 %     delta_m = 0;
 
-    delta = 50;
-    delta_m = 1;
+    delta = 10.;
+    delta_m = 1.;
     
     sigma  = delta/3.;
     sigma_m  = delta_m/3.;
@@ -31,26 +33,35 @@ function SphereRadiusFromDistance()
     % thetaRange = [pi/4 pi/4+pi/100];
     
     % Simplex type
-    % 0 - the simplex is composed of points located on a part of a sphere in the ranges of azimuthal and polar angles
-    % 1 - simplex is a tetrahedron with pairs of equal opposite edges
+    % 0 - the simplex is composed of points located on a part of a sphere 
+    %     in the ranges of azimuthal and polar angles
+    % 1 - the simplex is a tetrahedron with pairs of equal opposite edges
     % 2 - the simplex is an isosceles pyramid
-    generate_type = 0;
+    % 3 - the simplex is optimal coordinates of n points on a sphere of radius r,
+    %     providing the minimum root mean square deviation of the radius estimate
+    
+    generate_type = 1;
     
     if generate_type == 0
         points = generateRandomPointsInSolidAngle(R, numPoints, phiRange, thetaRange, sigma_m);
         
     elseif generate_type == 1
         % Distance from the center of the sphere to the horizontal planes, locations of points        
-%         h = R*0.998;
-        h = R*0.5; 
+        h = R*0.998;
+%         h = R*0.5; 
         fprintf('Distance from the center of the sphere to the horizontal planes, locations of points:%g\n', h);
         
         theta = pi / 2; % Angle between diametrical planes
+%         theta = pi / 2 - pi/1800; % Angle between diametrical planes
         points = generate_optim_tetrahedron_points(R, h, theta, sigma_m);
         
     elseif generate_type == 2
         h = R*cos(thetaRange(2));
         points = generate_sphere_points_on_isosceles_pyramid(numPoints, R, h, sigma_m);
+        
+    elseif generate_type == 3
+        points = optimal_n_points_on_sphere(R, numPoints);
+
     end
 
     % Generating a distance matrix
@@ -58,8 +69,8 @@ function SphereRadiusFromDistance()
 %     S0
 %     S
 
-    if generate_type == 1
-        fprintf('Radius platonic solids (Tetrahedron)= %g\n', radius_platonic_solids(S));
+    if generate_type == 1 || generate_type == 3 
+        fprintf('Sphere radius for optimal placement of %d points= %g\n', numPoints, radius_optimal_n_points_on_sphere(S));
     end
 
     % Tennis ball

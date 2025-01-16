@@ -2,14 +2,10 @@ function calc_Radius(S, sigma, sigma_m, R0)
 
     numPoints = size(S,1);
 
-%     fprintf('\n');
-
-    tic
     fprintf('Method 1:\n');
     [R1, sigma_R] = SphereRadius_Sukhovilov1(S, sigma, sigma_m, R0);
-    fprintf('\tRadius= %g\tRMSE of R1: %g\tElapsed time =%g\n', R1, sigma_R, toc);
+    fprintf('\tRadius= %g\tRMSE of R1: %g\n', R1, sigma_R);
 
-%     tic
 %     fprintf('Metod 2:\n');
 %     rmin0 = R0 - 0.15*R0;
 %     rmax0 = R0 + 0.15*R0;
@@ -27,44 +23,41 @@ function calc_Radius(S, sigma, sigma_m, R0)
 %     else
 %         fprintf('Metod 2 Radius not found!');
 %     end
-%     fprintf('\tElapsed time:%g\n', toc);
 
-%     tic
 %     fprintf('Metod 3:\n');
 %     [R3, R_confidence_intervals] = SphereRadius_Sukhovilov3(R0, S, sigma, sigma_m);
 %     fprintf('\tRadius= %g', R3);
 %     if numPoints > 4
 %         fprintf('\tconfidence_intervals=[%g %g]', R_confidence_intervals);
 %     end
-%     fprintf('\tElapsed time= %g\n', toc);
+%     fprintf('\n');
          
     % Initial approximations for point coordinates
     [cg] = CenterOfGravityCoordFromPairDistance(S);
     
-    tic
     % https://www.geometrictools.com/Documentation/LeastSquaresFitting.pdf (5.1)
     % https://www.geometrictools.com/GTE/Mathematics/ApprSphere3.h
-    fprintf('Metod 4: (FitUsingLengths David Eberly)\n');
+    fprintf('Metod FitUsingLengths: (David Eberly)\n');
     maxIterations = 100;
     initialCenterIsAverage = 1;
     epsilon = eps(R0);
     [~, R4, iterations] = FitUsingLengths(cg', maxIterations, initialCenterIsAverage, epsilon);
-    fprintf('\tRadius= %g\titerations= %d\tElapsed time= %g\n', R4, iterations, toc);
+    fprintf('\tRadius= %g\titerations= %d\n', R4, iterations);
     
-    fprintf('\nAlgebraic methods\n');
+%     fprintf('\nAlgebraic methods\n');
     
-    % https://www.geometrictools.com/GTE/Mathematics/ApprSphere3.h
-    fprintf('Metod 5: (FitUsingSquaredLengths David Eberly)\n');
-    [~, R5] = FitUsingSquaredLengths(cg');
-    fprintf('\tRadius= %g\n', R5);
+%     % https://www.geometrictools.com/GTE/Mathematics/ApprSphere3.h
+%     fprintf('Metod 5: (FitUsingSquaredLengths David Eberly)\n');
+%     [~, R5] = FitUsingSquaredLengths(cg');
+%     fprintf('\tRadius= %g\n', R5);
     
-    % https://www.mathworks.com/matlabcentral/fileexchange/34129-sphere-fit-least-squared
-    fprintf('Metod 6:\n');
-    [~, R6] = sphereFit(cg');
-    fprintf('\tRadius= %g\n', R6);
+%     % https://www.mathworks.com/matlabcentral/fileexchange/34129-sphere-fit-least-squared
+%     fprintf('Metod 6:\n');
+%     [~, R6] = sphereFit(cg');
+%     fprintf('\tRadius= %g\n', R6);
     
     % Sumith YD, "Fast Geometric Fit Algorithm for Sphere Using Exact Solution" https://arxiv.org/pdf/1506.02776
-    fprintf('Metod 7:\n');
+    fprintf('Fast Geometric Fit Algorithm for Sphere: (Sumith YD):\n');
     [~, ~, ~, R7] = sumith_fit(cg');
     fprintf('\tRadius= %g\n', R7);
 
@@ -72,12 +65,12 @@ function calc_Radius(S, sigma, sigma_m, R0)
         fprintf('\n');
         % Get the edges of a tetrahedron
         [a, b, c, a1, b1, c1] = getTetrahedronEdges(S);
-        %     fprintf('a: %g\tb: %g\tc: %g\n', a,b,c);
-        %     fprintf('a1: %g\tb1: %g\tc1: %g\n', a1,b1,c1);
-        %     - a^2/2 - b^2/2 + c^2/2
-        %     - a^2/2 + b^2/2 - c^2/2
-        %       a^2/2 - b^2/2 - c^2/2
-        %       a^2/2 + b^2/2 + c^2/2 
+        fprintf('a: %g\tb: %g\tc: %g\n', a,b,c);
+        fprintf('a1: %g\tb1: %g\tc1: %g\n', a1,b1,c1);
+        - a^2/2 - b^2/2 + c^2/2
+        - a^2/2 + b^2/2 - c^2/2
+        a^2/2 - b^2/2 - c^2/2
+        a^2/2 + b^2/2 + c^2/2
         
         % Calculating the radius of a sphere circumscribing a tetrahedron using the Cayley-Menger determinant
         R_Cayley_Menger = SphereRadius_Cayley_Menger(a, b, c, a1 , b1, c1);
@@ -92,5 +85,4 @@ function calc_Radius(S, sigma, sigma_m, R0)
         R_Carnot = SphereRadius_Carnot(a, b, c1, a1, b1, c);
         fprintf('Calculating the radius of a sphere circumscribing a tetrahedron using Carnot formula: %g\n', R_Carnot);
     end
-
 end
