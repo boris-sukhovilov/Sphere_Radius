@@ -1,35 +1,35 @@
 function example_for_suh()
+    % (c) Vasiliev U.S example for Sukhovilov,
+    % that it is undesirable to locate points near the poles
+    % small measurement errors cause a large radius error??
+
     clc
 
     r = 1;
+    numPoints = 4;
     sigma = 0.03/3;
     sigma_m = 0.1;
 
     R0 = r+0.1*r;
 
-    % пример для Суховилова, что около полюсов располагать точки нежелательно
-    % малые ошибки измерений вызывают большую ошибку радиуса
-    % example_for_suh
-
     r=@(d)1/sqrt( sum(sum( inv(  [0 d(1:3); d(1) 0 d(4:5); d(2) d(4) 0 d(6);...
         d(3) d(5) d(6) 0].^2/2))));
 
-    % исх данные расчётов
-    phi=0.0988; % Угол отклонения от полюса
-    % phi=0.2; % Угол отклонения от полюса
-    relerr=0.01*[1,1,0,0,0,1];     % задаём относительную погрешность измерений
+    % initial calculation data
+    phi=0.0988; % Angle of deviation from the pole
+    relerr=0.01*[1,1,0,0,0,1];     % we set the relative measurement error
 
-    disp('пример, что малые ошибки измерений вызывают большую ошибку радиуса')
-    disp(['угол отклонения от полюса  ',num2str(phi)])
-    disp('относительные погрешности для измерений')
+    disp('example that small measurement errors cause large radius error?')
+    disp(['angle of deviation from the pole ',num2str(phi)])
+    disp('relative errors for measurements')
     disp(relerr)
 
-    % задаю координаты точек по предложению Суховилова
-    M1=[ sin(phi); 0;         cos(phi)]; % сев полюс направо
-    M2=[-sin(phi); 0;         cos(phi)];  % сев полюс налево
-    M3=[0;          sin(phi); -cos(phi)]; % юж полюс от нас
-    M4=[0;         -sin(phi); -cos(phi)]; % юж полюс к нам
-    %  расстояния между точками с маш погрешностью
+    % I set the coordinates of the points according to Sukhovilov's suggestion
+    M1=[ sin(phi); 0;      cos(phi)];   % north pole to the right
+    M2=[-sin(phi); 0;      cos(phi)];   % north pole to the left
+    M3=[0;       sin(phi); -cos(phi)];  % south pole away from us
+    M4=[0;      -sin(phi); -cos(phi)];  % south pole toward us
+    % distances between points with machine error
     s=zeros(1,6);
     s(1)=sqrt(     sum(   (M1-M2).^2   )         );%12
     s(2)=sqrt(     sum(   (M1-M3).^2   )         );%13
@@ -38,11 +38,11 @@ function example_for_suh()
     s(5)=sqrt(     sum(   (M2-M4).^2   )         );%24
     s(6)=sqrt(     sum(   (M3-M4).^2   )         );%34
     
-    disp('"точные" расстояния'); disp( num2str(s));
+    disp('"exact" distances'); disp( num2str(s));
 
-    disp(['радиус по "точным" расстояниям (анонимная функция):',num2str(r(s))])
+    disp(['radius by "exact" distances (anonymous function):',num2str(r(s))])
     
-    s=s.*(1+relerr); % измерения с погрешностью
+    s=s.*(1+relerr); % measurement with error
 
     % s(2) = 0.5*(s(2)+s(5));
     % s(5)=s(2);
@@ -54,32 +54,11 @@ function example_for_suh()
          s(2) s(4) 0    s(6);
          s(3) s(5) s(6) 0];
 
-    % tmp = (S(1,2) + S(3,4))/2;
-    % % tmp = 0;
-    % S(1,2) = tmp; 
-    % S(3,4) = tmp; 
-    % S(2,1) = tmp; 
-    % S(4,3) = tmp; 
-    % 
-    % tmp = (S(1,4) + S(2,3))/2;
-    % S(1,4) = tmp; 
-    % S(2,3) = tmp; 
-    % S(4,1) = tmp; 
-    % S(3,2) = tmp; 
-    % 
-    % tmp = (S(1,3) + S(2,4))/2;
-    % S(1,3) = tmp; 
-    % S(2,4) = tmp; 
-    % S(3,1) = tmp; 
-    % S(4,2) = tmp; 
-
-    % [U,S,V] = svd(ss)
-    % [V,D] = eig(ss)
-
-    disp('измеренные расстояния'); disp( num2str(s));
+    disp('measured distances'); disp( num2str(s));
+    disp(['radius by "measured" distances (anonymous function):',num2str(r(s))])
 
     calc_Radius(S, sigma, sigma_m, R0);
     
-    fprintf('Radius platonic solids = %g\n', radius_platonic_solids(S));
+    fprintf('Sphere radius for optimal placement of %d points= %g\n', numPoints, radius_optimal_n_points_on_sphere(S));
 
 end
