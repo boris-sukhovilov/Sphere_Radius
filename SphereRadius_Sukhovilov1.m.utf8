@@ -20,17 +20,20 @@ function [R, sigma_R] = SphereRadius_Sukhovilov1(S, sigma, sigma_m, R0)
 
     singular_values = svd(S2)';    
     singular_values = singular_values(1:rank_S2_0);
-    % RMSE of eigenvalues ??of matrix S2 caused by distance measurement errors and random deviations of the sphere shape
+    % RMSE of eigenvalues of matrix S2 caused by distance measurement errors and random deviations of the sphere shape
     sigma_lambda = sigma_eigenvalues(S, sigma, sigma_m, R0);
     % Contribution of computational error
     tol_0 = max(size(S2)) * eps(max(singular_values));
     % Total contribution of random and computational error
     tol = 3*sigma_lambda + tol_0;
-%     singular_values > tol
+
     rank_S2 = min([sum(singular_values > tol), rank_S2_0]);
+    
+%     rank_S2 = 3;
+    
     fprintf('\tFinal rank S2: %d\n', rank_S2);
     for i = 1 : 4
-        fprintf('\t%1d\tTotal error: %8.3e\tsingular value: %8.3e\n', i, tol(i), singular_values(i));
+        fprintf('\t%1d\tTotal error: %8.3e \t singular value: %8.3e\n', i, tol(i), singular_values(i));
     end
     
     S2_pinv = pseudo_inv(S2, rank_S2);

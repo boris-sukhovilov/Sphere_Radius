@@ -10,7 +10,7 @@ function example_for_suh()
     sigma = 0.03/3;
     sigma_m = 0.1;
 
-    R0 = r+0.1*r;
+    R0 = r-0.5*r;
 
     r=@(d)1/sqrt( sum(sum( inv(  [0 d(1:3); d(1) 0 d(4:5); d(2) d(4) 0 d(6);...
         d(3) d(5) d(6) 0].^2/2))));
@@ -60,5 +60,11 @@ function example_for_suh()
     calc_Radius(S, sigma, sigma_m, R0);
     
     fprintf('Sphere radius for optimal placement of %d points= %g\n', numPoints, radius_optimal_n_points_on_sphere(S));
+    
+    a = S(1,2);
+    b = S(1,3);
+    c = S(1,4);
+    a,b,c
+    R = (2^(1/2)*(a^2 + b^2 + c^2)^(1/2))/4
 
 end

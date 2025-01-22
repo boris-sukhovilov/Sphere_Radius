@@ -18,6 +18,21 @@ syms a b c d e f real
 % b = a;
 % c = a;
 
+% s=0.5*[0     a^2    a^2   a^2
+%        a^2   0      b^2   b^2
+%        a^2   b^2    0     b^2
+%        a^2   b^2    b^2   0  ];
+%    
+% inv_s = inv(s);
+% x = inv_s*bb;
+% x
+% R = simplify(1/sqrt(sum(x)));
+% R
+% y = x.*x;
+% simplify(y'*s*y)
+
+
+
 s=0.5*[0     a^2    b^2   c^2
        a^2   0      c^2   b^2
        b^2   c^2    0     a^2
@@ -35,8 +50,15 @@ ev
 inv_s=inv(s);
 % inv_s
 
+[V_inv, eigen_values_inv] = eig(inv_s);
+V_inv
+diag(eigen_values_inv)
+
 R=simplify(1/sqrt(bb'*inv_s*bb));
 R
+
+R2 = R^2;
+R2
 
 x = simplify(inv_s*bb);
 x

@@ -15,7 +15,7 @@ function SphereRadiusFromDistance()
 %     delta_m = 0;
 
     delta = 10.;
-    delta_m = 1.;
+    delta_m = 10.;
     
     sigma  = delta/3.;
     sigma_m  = delta_m/3.;
@@ -40,21 +40,21 @@ function SphereRadiusFromDistance()
     % 3 - the simplex is optimal coordinates of n points on a sphere of radius r,
     %     providing the minimum root mean square deviation of the radius estimate
     
-    generate_type = 1;
+    generate_type = 0;
     
     if generate_type == 0
         points = generateRandomPointsInSolidAngle(R, numPoints, phiRange, thetaRange, sigma_m);
         
     elseif generate_type == 1
         % Distance from the center of the sphere to the horizontal planes, locations of points        
-        h = R*0.998;
-%         h = R*0.5; 
+%         h = R*0.9998;
+        h = R*0.5; 
         fprintf('Distance from the center of the sphere to the horizontal planes, locations of points:%g\n', h);
         
-        theta = pi / 2; % Angle between diametrical planes
-%         theta = pi / 2 - pi/1800; % Angle between diametrical planes
+        theta = pi / 8; % Angle between diametrical planes
+%         theta = pi / 2 - pi/180; % Angle between diametrical planes
         points = generate_optim_tetrahedron_points(R, h, theta, sigma_m);
-        
+        points
     elseif generate_type == 2
         h = R*cos(thetaRange(2));
         points = generate_sphere_points_on_isosceles_pyramid(numPoints, R, h, sigma_m);
@@ -65,8 +65,9 @@ function SphereRadiusFromDistance()
     end
 
     % Generating a distance matrix
-    [S, ~] = generateMatrixDistance(points, sigma);
-%     S0
+    [S, S0] = generateMatrixDistance(points, sigma);
+%     sum(S0)
+%     sum(S0.*S0)
 %     S
 
     if generate_type == 1 || generate_type == 3 

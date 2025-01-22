@@ -26,7 +26,8 @@ function points = optimal_n_points_on_sphere(r, n)
     TolFun = eps(r);
     options=optimset('Display','off','MaxFunEvals',10000,'MaxIter',10000,'TolX',TolX,'TolFun',TolFun);
     [angels,fval,exitflag] =  fminsearch(@(angels) optim_sphere_fun(angels,r),angels,options);
-    % angels,fval
+    % angels
+    fval
     % exitflag
 
     % Fixing the sphere

@@ -16,7 +16,7 @@ function regular_polyhedron()
     points = generateTetrahedron(R);
     [points, S] = form_deviation(points, R, sigma, sigma_m);
     checkEqualDistanceSums(points, 'Tetrahedron');
-    fprintf('Radius platonic solids (Tetrahedron)= %g\n', radius_platonic_solids(S));
+    fprintf('Radius platonic solids (Tetrahedron)= %g\n', radius_optimal_n_points_on_sphere(S));
     calc_Radius(S, sigma, sigma_m, R0);
     fprintf('\n');
     
@@ -24,7 +24,7 @@ function regular_polyhedron()
     points = generateOctahedron(R);
     [points, S] = form_deviation(points, R, sigma, sigma_m);
     checkEqualDistanceSums(points, 'Octahedron');
-    fprintf('Radius platonic solids (Octahedron)= %g\n', radius_platonic_solids(S));
+    fprintf('Radius platonic solids (Octahedron)= %g\n', radius_optimal_n_points_on_sphere(S));
     calc_Radius(S, sigma, sigma_m, R0);
     fprintf('\n');
     
@@ -32,7 +32,7 @@ function regular_polyhedron()
     points = generateCube(R);
     [points, S] = form_deviation(points, R, sigma, sigma_m);
     checkEqualDistanceSums(points, 'Cube');
-    fprintf('Radius platonic solids (Cube)= %g\n', radius_platonic_solids(S));
+    fprintf('Radius platonic solids (Cube)= %g\n', radius_optimal_n_points_on_sphere(S));
     calc_Radius(S, sigma, sigma_m, R0);
     fprintf('\n');
 
@@ -40,7 +40,7 @@ function regular_polyhedron()
     points = generateDodecahedron(R);
     [points, S] = form_deviation(points, R, sigma, sigma_m);
     checkEqualDistanceSums(points, 'Dodecahedron');
-    fprintf('Radius platonic solids (Dodecahedron)= %g\n', radius_platonic_solids(S));
+    fprintf('Radius platonic solids (Dodecahedron)= %g\n', radius_optimal_n_points_on_sphere(S));
     calc_Radius(S, sigma, sigma_m, R0);
     fprintf('\n');
 
@@ -48,7 +48,7 @@ function regular_polyhedron()
     points = generateIcosahedron(R);
     [points, S] = form_deviation(points, R, sigma, sigma_m);
     checkEqualDistanceSums(points, 'Icosahedron');
-    fprintf('Radius platonic solids (Icosahedron)= %g\n', radius_platonic_solids(S));
+    fprintf('Radius platonic solids (Icosahedron)= %g\n', radius_optimal_n_points_on_sphere(S));
     calc_Radius(S, sigma, sigma_m, R0);
     fprintf('\n');
 

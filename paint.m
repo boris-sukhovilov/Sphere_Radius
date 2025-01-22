@@ -8,11 +8,12 @@ function paint(x,y,z,r)
 surf(r.*X,r.*Y,r.*Z)
 axis equal;
 
-[row, col]=size(x);
+[~, col]=size(x);
 hold on;
-plot3(x,y,z,'or','markersize',20);	% Отображение точек
-for i = 1 : row
- text(x(i), y(i), z(i), num2str(i),'Color','black');
+plot3(x,y,z,'*r','markersize',20);	% Отображение точек
+delta = (1+.05);
+for i = 1 : col
+ text(delta*x(i), delta*y(i), delta*z(i), num2str(i),'Color','black','FontSize',16);
 end
 
 hold off;

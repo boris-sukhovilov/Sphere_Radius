@@ -58,11 +58,11 @@ Y=V*z;
 
 % Functionality without taking into account deviations from the shape of a sphere
 % Only measurement errors are taken into account
-% f=2*(Y.^2)'*C*(Y.^2);
+f=2*(Y.^2)'*C*(Y.^2);
 
 % Functional taking into account the deviation from the shape of the sphere.
 % The first term is determined by errors in measuring pairwise distances
 % The second term is determined by errors in the shape of the surface of the sphere
 % sigma = 1, sigma_m = 1
-f=2*(Y.^2)'*C*(Y.^2)+4/r^2*((Y.^2)'*b)^2;
+% f=2*(Y.^2)'*C*(Y.^2)+4/r^2*((Y.^2)'*b)^2;
     

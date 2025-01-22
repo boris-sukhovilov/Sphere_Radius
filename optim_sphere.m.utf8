@@ -21,16 +21,20 @@ format short g
 r=1;
 
 % Number of points on a sphere
-n = 6;
+n = 5;
 
 % Number of angles involved in optimization
 len_angels = 2*n - 3;
 % The initial values of the angles are assigned randomly
 angels = 2*pi*rand(1, len_angels);
 
-options=optimset('Display','iter','MaxFunEvals',10000,'MaxIter',10000,'TolX',1.0e-12,'TolFun',1.0e-12);
+% options=optimset('Display','iter','MaxFunEvals',10000,'MaxIter',10000,'TolX',1.0e-12,'TolFun',1.0e-12);
+TolX = eps(r);
+TolFun = eps(r);
+options=optimset('Display','off','MaxFunEvals',10000,'MaxIter',10000,'TolX',TolX,'TolFun',TolFun);
 [angels,fval,exitflag] =  fminsearch(@(angels) optim_sphere_fun(angels,r),angels,options);
-% angels,fval
+% angels
+fval
 % exitflag
 
 % Fixing the sphere
@@ -87,6 +91,10 @@ z=bb(Ind1_4)./di(Ind1_4);
 V=U(:, Ind1_4);
 x=V*z;
 disp('Vector of solution of a system of linear equations'), disp(x');
+
+% f=2*(x.^2)'*C*(x.^2);
+% f
+% b'*C*b
 
 % Checking that the optimal tetrahedron has pairwise equal opposite edges
 if n == 4
