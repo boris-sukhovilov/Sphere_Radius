@@ -9,7 +9,7 @@ function regular_polyhedron()
     R0 = 1.1;
 %     sigma = eps(R);
 %     sigma_m = eps(R);
-    sigma = 0.1*R;
+    sigma = 0.01*R;
     sigma_m = 0.01*R;
     
     % Tetrahedron

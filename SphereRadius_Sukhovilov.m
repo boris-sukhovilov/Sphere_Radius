@@ -1,48 +1,66 @@
 % ----------------------------------------------------------------------
 % Estimate of the sphere radius
 % 
+% Input:
 % S - matrix of measured pairwise distances
 % sigma - RMSE distance measurement errors
 % sigma_m - RMSE random deviations of the sphere shape
 % R0 - Approximate value of the estimated radius.
 %      Participates in the calculation of 
 %      the final rank of the measured matrix of half-squared distances
+% confidence_interval - confidence interval
+% fPrint=0/1 - NO/YES debug print    
 % 
+% Output:
 % R - estimate of the sphere radius
 %     R = 1 / sqrt(sum(sum(pinv(S2))));
 % sigma_R - RMSE of radius R
 % ----------------------------------------------------------------------
-function [R, sigma_R] = SphereRadius_Sukhovilov1(S, sigma, sigma_m, R0)
+function [R, sigma_R] = SphereRadius_Sukhovilov(S, sigma, sigma_m, R0, confidence_interval, fPrint)
     % Construction of the measured matrix of half-squared distances
     S2 = 0.5 * S.^2;
+    
     % Initial rank of matrix S2
     rank_S2_0 = 4;
-
-    singular_values = svd(S2)';    
-    singular_values = singular_values(1:rank_S2_0);
-    % RMSE of eigenvalues of matrix S2 caused by distance measurement errors and random deviations of the sphere shape
-    sigma_lambda = sigma_eigenvalues(S, sigma, sigma_m, R0);
-    % Contribution of computational error
-    tol_0 = max(size(S2)) * eps(max(singular_values));
-    % Total contribution of random and computational error
-    tol = 3*sigma_lambda + tol_0;
-
-    rank_S2 = min([sum(singular_values > tol), rank_S2_0]);
+    % Final rank of matrix S2
+    [rank_S2_final, tol, singular_values] = final_rank(S2, rank_S2_0, sigma, sigma_m, R0, confidence_interval, fPrint);
     
-%     rank_S2 = 3;
-    
-    fprintf('\tFinal rank S2: %d\n', rank_S2);
-    for i = 1 : 4
-        fprintf('\t%1d\tTotal error: %8.3e \t singular value: %8.3e\n', i, tol(i), singular_values(i));
+    if fPrint == 1
+        fprintf('\tFinal rank S2: %d\n', rank_S2_final);
+        for i = 1 : 4
+            fprintf('\t%1d\tTotal error: %8.3e \t singular value: %8.3e\n', i, tol(i), singular_values(i));
+        end
     end
     
-    S2_pinv = pseudo_inv(S2, rank_S2);
-
+%     sigma_R_min = inf;
+% %     rank_S2_final = rank_S2;
+% %     rank_S2_final = 4;
+%     for rank_ = rank_S2_final : -1 : 2
+%         S2_pinv = pseudo_inv(S2, rank_);
+%         tmp = sum(sum(S2_pinv));
+%         if tmp <= 0
+%             continue;
+%         end
+%         R = 1 / sqrt(tmp);
+%         b = ones(size(S2,1),1);
+%         x = S2_pinv*b;
+%         sigma_R = rmse(R, S2, x, sigma, sigma_m);
+%         if sigma_R < sigma_R_min
+%             sigma_R_min = sigma_R;
+%             R_min = R;
+%             rank_S2_final = rank_;
+%         end
+%     end
+%     R = R_min;
+%     sigma_R = sigma_R_min;
+%     if fPrint == 1
+%         fprintf('\tFinal rank S2: %d\n', rank_S2_final);
+%     end
+    
+    S2_pinv = pseudo_inv(S2, rank_S2_final);
     R = 1 / sqrt(sum(sum(S2_pinv)));
-
     b = ones(size(S2,1),1);
     x = S2_pinv*b;
-    
     sigma_R = rmse(R, S2, x, sigma, sigma_m);
 end
 

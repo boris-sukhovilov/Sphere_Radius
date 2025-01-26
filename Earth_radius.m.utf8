@@ -1,56 +1,62 @@
 %  ----------------------------------------------------------- 
-%     Determination Earth radius by flight distances
+%   Determination Earth radius by flight distances
 %  -----------------------------------------------------------
 %
 % https://www.travelmath.com/ (22.01.25)	
-%               Moscow    Tokyo    Delhi     Montevideo  Anchorage  Sydney
-% Moscow        0         7501     4341      13348       7017       14485
-% Tokyo                   0        5850      18576       5572       7792
-% Delhi                            0         15598       9175       10419
-% Montevideo                                 0           13522      11882
-% Anchorage                                              0          11802
+%         Seattle	Moscow	Tokyo	Delhi	Montevideo	Anchorage	Sydney
+% Seattle 0	        8397    7712	11332	11258	    3639        12454
+% Moscow            0       7501    4341    13348       7017        14485
+% Tokyo                     0       5850    18576       5572        7792
+% Delhi                             0       15598       9175        10419
+% Montevideo                                0           13522       11882
+% Anchorage                                             0           11802
 % Sydney                                                            0
 
 function Earth_radius()
     clc
-
-    s = ...
-       [0    7501  4341   13348   7017  14485
-        7501  0    5850   18576   5572  7792
-        4341  5850 0      15598   9175  10419
-        13348 18576 15598 0       13522 11882
-        7017  5572  9175  13522   0     11802
-        14485 7792  10419 11882   11802 0];
-
-    b = ones(size(s,1),1);
-
-    % Initial approximation Earth radius
-    r0=6000;
     
-    % 1) Determining Earth radius by 4 points
-    s4 = s(1:4,1:4);
-    b4 = b(1:4,:);
-    [r,~]=fzero(@(r) (1-b4'*((2.*(sin(s4./(2*r))).^2)\b4)), r0);
-    fprintf('Earth radius by 4 points:%g\n', r);
+    % RMSE of distance measurement (km)
+    sigma = 10/3;
+    % RMSE of the sphere shape (km)
+    sigma_m = 10/3;
+    % Initial approximation Earth radius (km)
+    R0 = 6000;
 
-    % 2) Determining Earth radius by 5 points
-    s5 = s(1:5,1:5);
-    b5 = b(1:5,:);
-    [r,~]=fzero(@(r) (1-b5'*pseudo_inv(2.*(sin(s5./(2*r))).^2, 4)*b5), r0);
-    fprintf('Earth radius by 5 points:%g\n', r);
-
-    % 3) Determining Earth radius by 6 points
-    [r, ~]=fzero(@(r) (1-b'*pseudo_inv(2.*(sin(s./(2*r))).^2, 4)*b), r0);
-    fprintf('Earth radius by 6 points:%g\n', r);
-
-    % Plot
-    i=0;
-    step=1;
-    for r=r-10:step:r+10
-        i=i+1;
-        x(i)=r;
-        y(i)=1-b'*pseudo_inv(2.*(sin(s./(2*r))).^2, 4)*b;
+    % flight distances
+    s = ...
+       [0	   8397   7712    11332	  11258   3639   12454
+        8397   0      7501    4341    13348   7017   14485
+        7712   7501   0       5850    18576   5572   7792
+        11332  4341   5850    0       15598   9175   10419
+        11258  13348  18576   15598   0       13522  11882
+        3639   7017   5572    9175    13522   0      11802
+        12454  14485  7792    10419   11882   11802  0];
+    
+    n = size(s,1);
+    b = ones(n,1);
+    
+    for i = 4 : n
+        S = s(1:i,1:i);
+        B = b(1:i,:);
+        [R, ~]=fzero(@(r) (2-B'*pseudo_inv((sin(S./(2*r))).^2, 4)*B), R0);
+        sigma_R = rmse(R, S, sigma, sigma_m);
+        fprintf('Earth radius by %d points: %g\tRMSE R: %g\n', i, R, sigma_R);
     end
-    plot(x,y),grid
+    
 end
 
+% ----------------------------------------------------------------------
+% sigma_R - RMSE of radius R
+% ----------------------------------------------------------------------
+function sigma_R = rmse(R, S, sigma, sigma_m)
+    S2 = 0.5*S.*S;
+    S2_pinv = pseudo_inv(2.*R^2*(sin(S./(2*R))).^2, 4);
+    b = ones(size(S2,1),1);
+    x = S2_pinv*b;
+    % the component of dispersion (1/R^2) caused by errors in distance measurement
+    d=(2*sigma^2)*((x.^2)'*S2*(x.^2)); 
+    % component of variance (1/R^2) due to model errors
+    d=d+4*sigma_m^2*x'*x/R^2;
+    % root mean square error (RMSE) R
+    sigma_R=0.5*(R^3)*sqrt(d);
+end

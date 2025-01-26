@@ -4,16 +4,23 @@ function example_for_suh()
     % small measurement errors cause a large radius error??
 
     clc
+    
+    % anonymous function
+    r=@(d)1/sqrt( sum(sum(inv([0 d(1:3); d(1) 0 d(4:5); d(2) d(4) 0 d(6); d(3) d(5) d(6) 0].^2/2))));
 
-    r = 1;
+    % radius sphere
+    R = 1;
+    % initial approximation radius sphere
+    R0 = R + 0.5*R;
+
     numPoints = 4;
-    sigma = 0.03/3;
-    sigma_m = 0.1;
-
-    R0 = r-0.5*r;
-
-    r=@(d)1/sqrt( sum(sum( inv(  [0 d(1:3); d(1) 0 d(4:5); d(2) d(4) 0 d(6);...
-        d(3) d(5) d(6) 0].^2/2))));
+    
+    % For a normal distribution, the ±4sigma confidence interval covers approximately 99.9937% of all possible values.
+    % This means that the confidence level for the ±4sigma interval is about 99.9937%.
+    confidence_interval = 4;
+    
+    sigma = 0.01;
+    sigma_m = 0.01;
 
     % initial calculation data
     phi=0.0988; % Angle of deviation from the pole
@@ -57,14 +64,13 @@ function example_for_suh()
     disp('measured distances'); disp( num2str(s));
     disp(['radius by "measured" distances (anonymous function):',num2str(r(s))])
 
-    calc_Radius(S, sigma, sigma_m, R0);
+    fPrint = 1;
+    [~, ~] = calc_Radius(S, sigma, sigma_m, R0, confidence_interval, fPrint);
     
     fprintf('Sphere radius for optimal placement of %d points= %g\n', numPoints, radius_optimal_n_points_on_sphere(S));
     
-    a = S(1,2);
-    b = S(1,3);
-    c = S(1,4);
-    a,b,c
-    R = (2^(1/2)*(a^2 + b^2 + c^2)^(1/2))/4
-
+%     a = S(1,2); b = S(1,3); c = S(1,4);
+%     R = (2^(1/2)*(a^2 + b^2 + c^2)^(1/2))/4;
+%     a,b,c
+%     R
 end
