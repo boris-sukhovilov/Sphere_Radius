@@ -4,13 +4,13 @@
 %
 % https://www.travelmath.com/ (22.01.25)	
 %         Seattle	Moscow	Tokyo	Delhi	Montevideo	Anchorage	Sydney
-% Seattle 0	        8397    7712	11332	11258	    3639        12454
-% Moscow            0       7501    4341    13348       7017        14485
-% Tokyo                     0       5850    18576       5572        7792
-% Delhi                             0       15598       9175        10419
-% Montevideo                                0           13522       11882
-% Anchorage                                             0           11802
-% Sydney                                                            0
+% Seattle 0             8397    7712    11332   11258           3639            12454
+% Moscow                0       7501    4341    13348           7017            14485
+% Tokyo                         0       5850    18576           5572            7792
+% Delhi                                 0       15598           9175            10419
+% Montevideo                                    0               13522           11882
+% Anchorage                                                     0               11802
+% Sydney                                                                        0
 
 function Earth_radius()
     clc
@@ -24,7 +24,7 @@ function Earth_radius()
 
     % flight distances
     s = ...
-       [0	   8397   7712    11332	  11258   3639   12454
+       [0      8397   7712    11332   11258   3639   12454
         0      0      7501    4341    13348   7017   14485
         0      0      0       5850    18576   5572   7792
         0      0      0       0       15598   9175   10419

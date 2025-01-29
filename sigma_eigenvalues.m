@@ -9,10 +9,6 @@ function [sigma_lambda] = sigma_eigenvalues(S2, sigma, sigma_m, R0, fPrint)
        y = V(:,k).*V(:,k);
        lambda_i = lambda(k);
        disp_s = 2*sigma^2*y'*S2*y;
-%        disp_s
-%        disp_s = 2*sigma^2*sum(sum(S2.*(V(:,k)*V(:,k)').*(V(:,k)*V(:,k)')));
-%        disp_s
-%        disp_m = 4*R0^2*sigma_m^2*sum(V(:,i))^2;
        disp_m = 4*sigma_m^2*(lambda_i/R0)^2*sum(y.*y);
        
        if fPrint == 1

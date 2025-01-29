@@ -32,31 +32,6 @@ function [R, sigma_R] = SphereRadius_Sukhovilov(S, sigma, sigma_m, R0, confidenc
         end
     end
     
-%     sigma_R_min = inf;
-% %     rank_S2_final = rank_S2;
-% %     rank_S2_final = 4;
-%     for rank_ = rank_S2_final : -1 : 2
-%         S2_pinv = pseudo_inv(S2, rank_);
-%         tmp = sum(sum(S2_pinv));
-%         if tmp <= 0
-%             continue;
-%         end
-%         R = 1 / sqrt(tmp);
-%         b = ones(size(S2,1),1);
-%         x = S2_pinv*b;
-%         sigma_R = rmse(R, S2, x, sigma, sigma_m);
-%         if sigma_R < sigma_R_min
-%             sigma_R_min = sigma_R;
-%             R_min = R;
-%             rank_S2_final = rank_;
-%         end
-%     end
-%     R = R_min;
-%     sigma_R = sigma_R_min;
-%     if fPrint == 1
-%         fprintf('\tFinal rank S2: %d\n', rank_S2_final);
-%     end
-    
     S2_pinv = pseudo_inv(S2, rank_S2_final);
     R = 1 / sqrt(sum(sum(S2_pinv)));
     b = ones(size(S2,1),1);
