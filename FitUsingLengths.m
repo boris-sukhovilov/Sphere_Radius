@@ -1,3 +1,13 @@
+% // David Eberly, Geometric Tools, Redmond WA 98052
+% // Copyright (c) 1998-2024
+% // Distributed under the Boost Software License, Version 1.0.
+% // https://www.boost.org/LICENSE_1_0.txt
+% // https://www.geometrictools.com/License/Boost/LICENSE_1_0.txt
+% // Version: 6.0.2023.08.08
+% https://www.geometrictools.com/Documentation/LeastSquaresFitting.pdf (5.1)
+% https://www.geometrictools.com/GTE/Mathematics/ApprSphere3.h
+% 
+% Translate from C++ to Matlab by Copilot
 function [center, radius, iterations] = FitUsingLengths(points, maxIterations, initialCenterIsAverage, epsilon)
     if nargin < 4
         epsilon = 0;

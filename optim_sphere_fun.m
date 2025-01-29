@@ -4,10 +4,13 @@
 % Input
 % angels - vector of azimuthal and polar angles of points on the sphere
 % r - radius of the sphere
+% sigma - RMSE of distance measurement
+% sigma_m - RMSE of the sphere shape
+%
 % Output
 % f - variance to be minimized
 % ------------------------------------------------------------------
-function [f] = optim_sphere_fun(angels, r)
+function [f] = optim_sphere_fun(angels, r, sigma, sigma_m)
 
 % Number of points
 n=(length(angels)+3)/2;
@@ -58,11 +61,11 @@ Y=V*z;
 
 % Functionality without taking into account deviations from the shape of a sphere
 % Only measurement errors are taken into account
-f=2*(Y.^2)'*C*(Y.^2);
+% f=2*(Y.^2)'*C*(Y.^2);
 
 % Functional taking into account the deviation from the shape of the sphere.
 % The first term is determined by errors in measuring pairwise distances
 % The second term is determined by errors in the shape of the surface of the sphere
 % sigma = 1, sigma_m = 1
-% f=2*(Y.^2)'*C*(Y.^2)+4/r^2*((Y.^2)'*b)^2;
+f=2*sigma^2*(Y.^2)'*C*(Y.^2)+4*sigma_m^2/r^2*((Y.^2)'*b)^2;
     

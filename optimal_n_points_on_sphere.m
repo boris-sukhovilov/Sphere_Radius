@@ -5,8 +5,10 @@
 % r - sphere radius
 % n - number of points on a sphere
 % points - matrix vectors of coordinates points on a sphere (size 3 x n)
+% sigma - RMSE of distance measurement
+% sigma_m - RMSE of the sphere shape
 % ----------------------------------------------------------------------------
-function points = optimal_n_points_on_sphere(r, n)
+function points = optimal_n_points_on_sphere(r, n, sigma, sigma_m)
     % Let's remove extra degrees of freedom of the system of points placed on the sphere 
     % by fixing the sphere in some coordinate system.
     % Let's fix the sphere with points in some coordinate system.
@@ -25,7 +27,7 @@ function points = optimal_n_points_on_sphere(r, n)
     TolX = eps(r);
     TolFun = eps(r);
     options=optimset('Display','off','MaxFunEvals',10000,'MaxIter',10000,'TolX',TolX,'TolFun',TolFun);
-    [angels,fval,exitflag] =  fminsearch(@(angels) optim_sphere_fun(angels,r),angels,options);
+    [angels,fval,exitflag] =  fminsearch(@(angels) optim_sphere_fun(angels, r, sigma, sigma_m),angels,options);
     % angels
     % fval
     % exitflag

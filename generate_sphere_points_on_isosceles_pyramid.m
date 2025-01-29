@@ -1,23 +1,21 @@
 function points = generate_sphere_points_on_isosceles_pyramid(numPoints, R, h, sigma_m)
-    % Проверка входных данных
+    % Input data validation
     if h < -R || h > R
-        error('h должно быть в диапазоне [-R, R]');
+        error('h must be in the range [-R, R]');
     end
 
-    % Инициализация массива для хранения координат точек
     points = zeros(numPoints, 3);
 
-    % Координаты северного полюса
+    % North Pole Coordinates
     points(1, :) = [0, 0, R];
 
-    % Угол между точками на окружности
+    % Angle between points on a circle
     theta = linspace(0, 2*pi, numPoints);
-%     theta*180/pi
 
-    % Радиус окружности на плоскости z = h
+    % The radius of a circle on a plane z = h
     r = sqrt(R^2 - h^2);
 
-    % Вычисление координат точек на окружности
+    % Calculating the coordinates of points on a circle
     for i = 2:numPoints
         points(i, :) = [r * cos(theta(i)), r * sin(theta(i)), h];
     end

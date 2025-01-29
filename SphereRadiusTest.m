@@ -1,3 +1,6 @@
+% -----------------------------------------------
+% Main function for experiments
+% -----------------------------------------------
 function SphereRadiusTest()
     clc
     rng('shuffle');
@@ -18,7 +21,8 @@ function SphereRadiusTest()
     NTEST = 500;
     
     % number of points
-    numPoints = 4;
+    % numPoints = 4;
+    
     
 %     delta = eps(R);
 %     delta_m = eps(R);
@@ -33,89 +37,162 @@ function SphereRadiusTest()
     % Azimuth angle range measured in the horizontal plane
     phiRange = [0 2*pi];
     % Polar angle range. This is the angle between the radius vector of the point and the vertical axis.
-    thetaRange = [0 2*pi/16];
+    thetaRange = [0 2*pi/4];
     
     % Location of points in a non-diametrical plane
-    % thetaRange = [pi/4 pi/4+pi/100];        
+    % thetaRange = [pi/4 pi/4+pi/100];
+    
         
     % ========================================================================
-    % Simplex type
+    %     
+    %  ! Assign the type of point generation on the sphere - Simplex type !
+    % 
     % ========================================================================
+    %  generate_type == 0,1,2 - We do not use these methods in Monte Carlo tests.       
     generate_type = 3;
-    % -------------------------------------------------------------------------
+    
+    % ----------------------------------------------------------------------------------------    
     % 0 - the simplex is composed of points located on a part of a sphere 
     %     in the ranges of azimuthal and polar angles
-    % -------------------------------------------------------------------------
+    % Problem. Points can lie near one non-diametrical plane?
+    % ----------------------------------------------------------------------------------------    
     % 1 - the simplex is a tetrahedron with pairs of equal opposite edges
     % Angle between diametrical planes
-    theta = pi / 4;
+    beta = pi / 2;
     % Distance from the center of the sphere to the horizontal planes, locations of points
-     h = R*0.98;
-     if fPrint == 1
-         fprintf('Angle between diametrical planes:%g\n', theta*180/pi);
-         fprintf('Distance from the center of the sphere to the horizontal planes, locations of points:%g\n', h);
-     end
-    % -------------------------------------------------------------------------
+    h = R*0.98;
+    if fPrint == 1
+        fprintf('Angle between diametrical planes:%g\n', beta*180/pi);
+        fprintf('Distance from the center of the sphere to the horizontal planes, locations of points:%g\n', h);
+    end
+    % ----------------------------------------------------------------------------------------    
     % 2 - the simplex is an isosceles pyramid
-    % -------------------------------------------------------------------------
+    % ----------------------------------------------------------------------------------------    
     % 3 - the simplex is optimal coordinates of n points on a sphere of radius r,
     %     providing the minimum root mean square deviation of the radius estimate
-    % -------------------------------------------------------------------------    
-           
-    R_N_max = zeros(3,1);
-    R_N_mean = zeros(3,1);
-    R_N_sigma = zeros(3,1);
-    R_4_max = zeros(3,1);
-    R_4_mean = zeros(3,1);
-    R_4_sigma = zeros(3,1);
+    % ----------------------------------------------------------------------------------------    
+    % 4 - The simplex of points is divided into two groups of points:
+    % 1) four points form a tetrahedron with the vertex at the north pole of the sphere.
+    %    Three points of its base form an equilateral triangle in the plane located
+    %    at a distance h = R*cos(thetaRange(2)) from the pole;
+    % 2) the remaining points are located uniformly randomly in the given ranges 
+    %    of azimuth and polar angles
+    % ----------------------------------------------------------------------------------------    
     
-    k = 0;
-    for i = 1 : NTEST
-        [R_N, R_4, status] = SphereRadiusFromDistance(R, numPoints, sigma, sigma_m, R0, confidence_interval, ...
-                             phiRange, thetaRange, h, theta, generate_type, fPrint);
-        if status == 0
-            k = k+1;
-            if numPoints == 4
-                for j = 1 : length(R_4_max)
-                    d = abs(R-R_4(j));
-                    if d > R_4_max(j)
-                        R_4_max(j) = d;
-                    end
-                    R_4_mean(j) = R_4_mean(j) + d;
-                    R_4_sigma(j) = R_4_sigma(j) + d^2;
-                end
-            end
-            for j = 1 : length(R_N_max)
-                d = abs(R-R_N(j));
-                if d > R_N_max(j)
-                    R_N_max(j) = d;
-                end
-                R_N_mean(j) = R_N_mean(j) + d;
-                R_N_sigma(j) = R_N_sigma(j) + d^2;
-            end
+    if generate_type == 3
+        
+        numPoints_test = [4, 5, 10, 20, 50];
+        thetaRange = [0 pi];
+        
+        method_id = [1 2 3 4 11 12 13];        
+        
+        R_N_max_mat = cell(length(numPoints_test), 1);
+        R_N_mean_mat = cell(length(numPoints_test), 1);
+        R_N_sigma_mat = cell(length(numPoints_test), 1);
+        
+        for nPoints = 1 : length(numPoints_test)
+            numPoints = numPoints_test(nPoints);
+            
+            [R_N_max, R_N_mean, R_N_sigma] = MonteKarloTest( ...
+                NTEST, R, numPoints, sigma, sigma_m, R0, confidence_interval, ...
+                phiRange, thetaRange, h, beta, generate_type, fPrint);
+            
+            R_N_max_mat{nPoints, 1} = R_N_max;
+            R_N_mean_mat{nPoints, 1} = R_N_mean;
+            R_N_sigma_mat{nPoints, 1} = R_N_sigma;
+            
         end
+        
+        R_N_max_Points = cell2mat(R_N_max_mat);
+        R_N_mean_Points = cell2mat(R_N_mean_mat);
+        R_N_sigma_Points = cell2mat(R_N_sigma_mat);
+        
+        R_N_max_Points = R_N_max_Points(:, method_id);
+        R_N_mean_Points = R_N_mean_Points(:, method_id);
+        R_N_sigma_Points = R_N_sigma_Points(:, method_id);
+        
+        fprintf('thetaRange: [%g %g]\n', thetaRange*180/pi);
+        % disp('R_N_max_Points:'), disp(R_N_max_Points)
+        disp('R_N_mean_Points:'), disp(R_N_mean_Points)
+        % disp('R_N_sigma_Points:'), disp(R_N_sigma_Points)
+        
+    elseif generate_type == 4
+        
+        numPoints_test = [4, 5, 10, 20, 50, 100];
+%         thetaRange2_test = [pi/4, pi/2, 2*pi/3, pi-pi*5/180];
+        thetaRange2_test = [pi/4, pi/2, 2*pi/3, pi];
+        
+        method_id = [1 2 3 11 12 13];
+        
+        R_N_max_mat = cell(length(numPoints_test), 1);
+        R_N_mean_mat = cell(length(numPoints_test), 1);
+        R_N_sigma_mat = cell(length(numPoints_test), 1);
+            
+        for theta_test = 1 : length(thetaRange2_test)
+            thetaRange = [0 thetaRange2_test(theta_test)];
+            
+            for nPoints = 1 : length(numPoints_test)
+                numPoints = numPoints_test(nPoints);
+                
+                [R_N_max, R_N_mean, R_N_sigma] = MonteKarloTest( ...
+                    NTEST, R, numPoints, sigma, sigma_m, R0, confidence_interval, ...
+                    phiRange, thetaRange, h, beta, generate_type, fPrint);
+                
+                R_N_max_mat{nPoints, 1} = R_N_max;
+                R_N_mean_mat{nPoints, 1} = R_N_mean;
+                R_N_sigma_mat{nPoints, 1} = R_N_sigma;
+            end
+            
+            R_N_max_Points = cell2mat(R_N_max_mat);
+            R_N_mean_Points = cell2mat(R_N_mean_mat);
+            R_N_sigma_Points = cell2mat(R_N_sigma_mat);
+            
+            R_N_max_Points = R_N_max_Points(:, method_id);
+            R_N_mean_Points = R_N_mean_Points(:, method_id);
+            R_N_sigma_Points = R_N_sigma_Points(:, method_id);
+            
+            fprintf('thetaRange: [%g %g]\n', thetaRange*180/pi);
+            % disp('R_N_max_Points:'), disp(R_N_max_Points)
+            disp('R_N_mean_Points:'), disp(R_N_mean_Points)
+            % disp('R_N_sigma_Points:'), disp(R_N_sigma_Points)
+            
+        end
+        
+    %  generate_type == 0,1,2 - We do not use these methods in Monte Carlo tests.       
+    elseif generate_type == 0
+        
+        fPrint=1;
+        NTEST = 1;
+        numPoints = 4;
+        
+        [R_N_max, R_N_mean, R_N_sigma] = MonteKarloTest( ...
+            NTEST, R, numPoints, sigma, sigma_m, R0, confidence_interval, ...
+            phiRange, thetaRange, h, beta, generate_type, fPrint);        
+        
+    elseif generate_type == 1
+        
+        fPrint=1;
+        NTEST = 1;
+        numPoints = 4;
+        
+        [R_N_max, R_N_mean, R_N_sigma] = MonteKarloTest( ...
+            NTEST, R, numPoints, sigma, sigma_m, R0, confidence_interval, ...
+            phiRange, thetaRange, h, beta, generate_type, fPrint);
+
+    elseif generate_type == 2
+        
+        fPrint=1;
+        NTEST = 1;
+        numPoints = 4;
+        thetaRange = [0 pi/4];
+        
+        [R_N_max, R_N_mean, R_N_sigma] = MonteKarloTest( ...
+            NTEST, R, numPoints, sigma, sigma_m, R0, confidence_interval, ...
+            phiRange, thetaRange, h, beta, generate_type, fPrint);        
     end
     
-    for j = 1 : length(R_4_max)
-        R_4_mean(j) = R_4_mean(j)/k;
-        R_4_sigma(j) = sqrt(R_4_sigma(j)/(k-1));
-    end
-    for j = 1 : length(R_N_max)
-        R_N_mean(j) = R_N_mean(j)/k;
-        R_N_sigma(j) = sqrt(R_N_sigma(j)/(k-1));
-    end
-    
-    k
-    R_N_max
-    R_N_mean
-    R_N_sigma
-    
-    R_4_max
-    R_4_mean
-    R_4_sigma
-    
-    % RMSE of R for optimal placement of points on the entire surface of the sphere
-    sigma_Optim = sqrt(sigma^2/(2*numPoints^2)+sigma_m^2/numPoints);
-    fprintf('RMSE of R for optimal placement of points: %g\n\n', sigma_Optim);
+%     % RMSE of R for optimal placement of points on the entire surface of the sphere
+%     sigma_Optim = sqrt(sigma^2/(2*numPoints^2)+sigma_m^2/numPoints);
+%     fprintf('RMSE of R for optimal placement of points: %g\n\n', sigma_Optim);
 
 end

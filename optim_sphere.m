@@ -23,6 +23,11 @@ r=1;
 % Number of points on a sphere
 n = 5;
 
+% RMSE of distance measurement
+sigma = 0.01;
+% RMSE of the sphere shape
+sigma_m = 0.01;
+
 % Number of angles involved in optimization
 len_angels = 2*n - 3;
 % The initial values of the angles are assigned randomly
@@ -32,7 +37,7 @@ angels = 2*pi*rand(1, len_angels);
 TolX = eps(r);
 TolFun = eps(r);
 options=optimset('Display','off','MaxFunEvals',10000,'MaxIter',10000,'TolX',TolX,'TolFun',TolFun);
-[angels,fval,exitflag] =  fminsearch(@(angels) optim_sphere_fun(angels,r),angels,options);
+[angels,fval,exitflag] =  fminsearch(@(angels) optim_sphere_fun(angels, r, sigma, sigma_m),angels,options);
 % angels
 fval
 % exitflag
@@ -104,4 +109,3 @@ if n == 4
     fprintf('c(2,3) - c(1,4)=%f\n',c(2,3) - c(1,4));
     fprintf('c(1,3) - c(2,4)=%f\n',c(1,3) - c(2,4));
 end
-

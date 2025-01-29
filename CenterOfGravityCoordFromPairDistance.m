@@ -1,34 +1,34 @@
-% -----------------------------------------------------------------
-% ¬ычислим координаты в —  с центром в ÷“ и ос€ми вдоль
-% собст. векторов соответствующих 3-м наибольшим собст. значени€м
-% матрицы скал€рных произведений
-% ¬ход:
-% s - матрица парных рассто€ний
-% -----------------------------------------------------------------
+% ------------------------------------------------------------------------------------------
+% Calculate the coordinates of the vectors of n points in the coordinate system
+% with the center at the center of gravity of the coordinates of the vectors of points
+% and the axes directed along the eigenvectors, corresponding to the 3 largest eigenvalues
+% matrix of scalar products of the coordinates of the vectors of points
+% Input:
+% s - matrix of pairwise distances
+% Output:
+% cg - matrix of vector coordinates of size 3xn
+% ------------------------------------------------------------------------------------------
 function [cg] = CenterOfGravityCoordFromPairDistance(s)
     n = size(s,1);
 
-    % —пособ вычислени€ матрицы скал€рных произведений в —  с центром в ÷“
+    % Calculation of the matrix of scalar products in the coordinate system
+    % with the center at the center of gravity
     J=eye(n,n)-(1/n)*ones(n,n);
     c = -0.5*J*s.^2*J;
-%     c
 
-    % координаты после фильтрации через svd
+    % matrix of vector coordinates of size 3xn
     [cg]=factorization2(c);
 end
 
-% --------------------------------------------------------------------
-% вычисление координат, разложением матрицы скал€рных произведений
-% через svd
-% --------------------------------------------------------------------
+% ---------------------------------------------------------------------------------------
+% calculation of coordinates, decomposition of the matrix of scalar products via svd
+% ---------------------------------------------------------------------------------------
 function [beta]=factorization2(c)
-    % ƒл€ квадратной симметричной матрицы сингул€рные числа равны модул€м
-    % собственных чисел. ƒл€ несимметричных это уже не так.    
-    [U,L,~] = svd(c);   % U - сингул€рные вектора, L - значени€
+    % For a square symmetric matrix, the singular values are equal to the absolute values of the eigenvalues
+    [U,L,~] = svd(c);
     di = diag(L);
 
-    % возмем 3 векторов, соответствующих 3 наибольшим сингул€рным значени€м
-    % U=U(:,[1 2 3]);
+    % we take 3 vectors corresponding to the 3 largest singular values
     U = U(:,1:3);
     sqrt_lamda = diag(sqrt(di(1:3)));
 

@@ -1,0 +1,33 @@
+thetaRange: [0 45]
+R_N_mean_Points:
+    4.4690   34.0204    4.4690    4.4690    4.4690    4.4690
+    4.3466   43.0431    4.3720       NaN       NaN       NaN
+    3.4993   70.9088    3.5155       NaN       NaN       NaN
+    2.5248   90.4502    2.5249       NaN       NaN       NaN
+    1.3197  106.9457    1.3488       NaN       NaN       NaN
+    0.9238  111.3291    0.9297       NaN       NaN       NaN
+thetaRange: [0 90]
+R_N_mean_Points:
+    0.5534    0.5534    0.5534    0.5534    0.5534    0.5534
+    0.5204    0.5280    0.5280       NaN       NaN       NaN
+    0.4102    0.4290    0.4290       NaN       NaN       NaN
+    0.3486    0.3539    0.3543       NaN       NaN       NaN
+    0.2261    0.2284    0.2282       NaN       NaN       NaN
+    0.1501    0.1510    0.1507       NaN       NaN       NaN
+thetaRange: [0 120]
+R_N_mean_Points:
+    0.4470    0.4470    0.4470    0.4470    0.4470    0.4470
+    0.4416    0.4462    0.4462       NaN       NaN       NaN
+    0.2999    0.3218    0.3218       NaN       NaN       NaN
+    0.2190    0.2216    0.2216       NaN       NaN       NaN
+    0.1329    0.1346    0.1347       NaN       NaN       NaN
+    0.0921    0.0922    0.0922       NaN       NaN       NaN
+thetaRange: [0 180]
+R_N_mean_Points:
+    1.7031    0.5363  651.8061  861.6585  861.6585  861.6585
+    1.6516    0.5853  187.6492       NaN       NaN       NaN
+    0.3245    0.3880    0.3426       NaN       NaN       NaN
+    0.2001    0.2094    0.2094       NaN       NaN       NaN
+    0.1205    0.1220    0.1220       NaN       NaN       NaN
+    0.0875    0.0886    0.0886       NaN       NaN       NaN
+>> 

@@ -1,7 +1,7 @@
 function example_for_suh()
     % (c) Vasiliev U.S example for Sukhovilov,
     % that it is undesirable to locate points near the poles
-    % small measurement errors cause a large radius error??
+    % small measurement errors cause a large radius error?
 
     clc
     
@@ -13,7 +13,7 @@ function example_for_suh()
     % initial approximation radius sphere
     R0 = R + 0.5*R;
 
-    numPoints = 4;
+%     numPoints = 4;
     
     % For a normal distribution, the ±4sigma confidence interval covers approximately 99.9937% of all possible values.
     % This means that the confidence level for the ±4sigma interval is about 99.9937%.
@@ -65,9 +65,10 @@ function example_for_suh()
     disp(['radius by "measured" distances (anonymous function):',num2str(r(s))])
 
     fPrint = 1;
-    [~, ~] = calc_Radius(S, sigma, sigma_m, R0, confidence_interval, fPrint);
+    generate_type = 1;
+    calc_Radius(S, sigma, sigma_m, R0, confidence_interval, fPrint, generate_type);
     
-    fprintf('Sphere radius for optimal placement of %d points= %g\n', numPoints, radius_optimal_n_points_on_sphere(S));
+%     fprintf('Sphere radius for optimal placement of %d points= %g\n', numPoints, radius_optimal_n_points_on_sphere(S));
     
 %     a = S(1,2); b = S(1,3); c = S(1,4);
 %     R = (2^(1/2)*(a^2 + b^2 + c^2)^(1/2))/4;

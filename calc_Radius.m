@@ -1,7 +1,9 @@
-function [R_N, R_4] = calc_Radius(S, sigma, sigma_m, R0, confidence_interval, fPrint)
-
-    R_N = zeros(3,1);
-    R_4 = zeros(3,1);
+% ------------------------------------------
+% Calculate radius by all methods
+% ------------------------------------------
+function R_N = calc_Radius(S, sigma, sigma_m, R0, confidence_interval, fPrint, generate_type)
+  
+    R_N = NaN(1,20);
     
     numPoints = size(S,1);
 
@@ -10,33 +12,7 @@ function [R_N, R_4] = calc_Radius(S, sigma, sigma_m, R0, confidence_interval, fP
         fprintf('Method 1:\n');
         fprintf('\tRadius= %g\tRMSE of R1: %g\n', R1, sigma_R);
     end
-
-%     fprintf('Metod 2:\n');
-%     rmin0 = R0 - 0.15*R0;
-%     rmax0 = R0 + 0.15*R0;
-%     rmin0 = max([eps, rmin0]);
-%     fprintf('root search range: [%g %g]\n', rmin0, rmax0);
-%     % Minimum root isolation interval size
-% %     d = max([eps(R0) 3*sqrt(sigma^2 + sigma_m^2)/1000]);
-%     d = (rmax0 - rmin0)/1000;
-%     [R2, sigma_R, sigma_upper_bound, status] = SphereRadius_Sukhovilov2(R0, S, sigma, sigma_m, rmin0, rmax0, d);
-%     if status == 1
-%         for i = 1 : length(R2)
-% %             fprintf('Metod 2: Radius= %g\tRMSE of R2= %g\tUpper bound for RMSE of R: %g\n', R2(i), sigma_R(i), sigma_upper_bound(i));
-%             fprintf('\tRadius= %g\tRMSE of R2= %g\n', R2(i), sigma_R(i));
-%         end
-%     else
-%         fprintf('Metod 2 Radius not found!');
-%     end
-
-%     fprintf('Metod 3:\n');
-%     [R3, R_confidence_intervals] = SphereRadius_Sukhovilov3(R0, S, sigma, sigma_m);
-%     fprintf('\tRadius= %g', R3);
-%     if numPoints > 4
-%         fprintf('\tconfidence_intervals=[%g %g]', R_confidence_intervals);
-%     end
-%     fprintf('\n');
-         
+        
     % Initial approximations for point coordinates
     [cg] = CenterOfGravityCoordFromPairDistance(S);
     
@@ -51,18 +27,6 @@ function [R_N, R_4] = calc_Radius(S, sigma, sigma_m, R0, confidence_interval, fP
         fprintf('\tRadius= %g\titerations= %d\n', R4, iterations);
     end
     
-%     fprintf('\nAlgebraic methods\n');
-    
-%     % https://www.geometrictools.com/GTE/Mathematics/ApprSphere3.h
-%     fprintf('Metod 5: (FitUsingSquaredLengths David Eberly)\n');
-%     [~, R5] = FitUsingSquaredLengths(cg');
-%     fprintf('\tRadius= %g\n', R5);
-    
-%     % https://www.mathworks.com/matlabcentral/fileexchange/34129-sphere-fit-least-squared
-%     fprintf('Metod 6:\n');
-%     [~, R6] = sphereFit(cg');
-%     fprintf('\tRadius= %g\n', R6);
-    
     % Sumith YD, "Fast Geometric Fit Algorithm for Sphere Using Exact Solution" https://arxiv.org/pdf/1506.02776
     [~, ~, ~, R7] = sumith_fit(cg');
     if fPrint == 1
@@ -70,7 +34,17 @@ function [R_N, R_4] = calc_Radius(S, sigma, sigma_m, R0, confidence_interval, fP
         fprintf('\tRadius= %g\n', R7);
     end
     
-    R_N = [R1, R4, R7];
+    R_N(1) = R1;
+    R_N(2) = R4;
+    R_N(3) = R7;
+    
+    if (generate_type == 1 || generate_type == 3)
+        R_opt = radius_optimal_n_points_on_sphere(S);
+        R_N(4) = R_opt;
+        if fPrint == 1
+            fprintf('Sphere radius for optimal placement of %d points= %g\n', numPoints, R_opt);
+        end
+    end
 
     if numPoints == 4
         % Get the edges of a tetrahedron
@@ -93,13 +67,15 @@ function [R_N, R_4] = calc_Radius(S, sigma, sigma_m, R0, confidence_interval, fP
         % Calculating the radius of a sphere circumscribing a tetrahedron using Carnot formula
         % In Carnot, the edges c and c1 are swapped
         R_Carnot = SphereRadius_Carnot(a, b, c1, a1, b1, c);
+        
         if fPrint == 1
-            
             fprintf('Calculating the radius of a sphere circumscribing a tetrahedron using Carnot formula: %g\n', R_Carnot);
             fprintf('Calculating the radius of a sphere circumscribing a tetrahedron using the Euler and Grelle formulas: %g\n', R_Euler_Grelle);
             fprintf('Calculating the radius of a sphere circumscribing a tetrahedron using the Cayley-Menger determinant: %g\n', R_Cayley_Menger);
         end
         
-        R_4 = [R_Carnot, R_Euler_Grelle, R_Cayley_Menger];
+        R_N(11) = R_Carnot;
+        R_N(12) = R_Euler_Grelle;
+        R_N(13) = R_Cayley_Menger;
     end
 end

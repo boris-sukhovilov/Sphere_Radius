@@ -1,27 +1,23 @@
+% Calculate adjoint matrix
 function adjA = adjointMatrix(A)
-    % Проверка, что матрица квадратная
+    % Checking if a matrix is square
     [n, m] = size(A);
     assert(n == m, 'Матрица должна быть квадратной');
 
-    % Инициализация присоединенной матрицы
+    % Initialize the attached matrix
     adjA = zeros(n);
 
-    % Вычисление присоединенной матрицы
+    % Calculate adjoint matrix
     for i = 1:n
         for j = 1:n
-            % Минор матрицы A без i-й строки и j-го столбца
+            % Minor of matrix A without i-th row and j-th column
             minorA = A;
             minorA(i, :) = [];
             minorA(:, j) = [];
-            % Коэффициент (-1)^(i+j)
+            % Coefficient (-1)^(i+j)
             cofactor = (-1)^(i+j);
-            % Присоединенная матрица
+            % Adjoint matrix
             adjA(j, i) = cofactor * det(minorA);
         end
     end
 end
-
-% % Пример использования
-% A = [1, 2, 3; 0, 1, 4; 5, 6, 0];
-% adjA = adjointMatrix(A);
-% disp(adjA);
