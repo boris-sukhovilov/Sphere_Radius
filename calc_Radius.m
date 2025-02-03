@@ -9,7 +9,7 @@ function R_N = calc_Radius(S, sigma, sigma_m, R0, confidence_interval, fPrint, g
 
     [R1, sigma_R] = SphereRadius_Sukhovilov(S, sigma, sigma_m, R0, confidence_interval, fPrint);
     if fPrint == 1
-        fprintf('Method 1:\n');
+        fprintf('Our Method: (Sukhovilov B.)\n');
         fprintf('\tRadius= %g\tRMSE of R1: %g\n', R1, sigma_R);
     end
         
@@ -40,9 +40,10 @@ function R_N = calc_Radius(S, sigma, sigma_m, R0, confidence_interval, fPrint, g
     
     if (generate_type == 1 || generate_type == 3)
         R_opt = radius_optimal_n_points_on_sphere(S);
+%         R_opt = estimateR(S, sigma);
         R_N(4) = R_opt;
         if fPrint == 1
-            fprintf('Sphere radius for optimal placement of %d points= %g\n', numPoints, R_opt);
+            fprintf('Our Method: Sphere radius for optimal placement of %d points= %g\n', numPoints, R_opt);
         end
     end
 
@@ -53,10 +54,10 @@ function R_N = calc_Radius(S, sigma, sigma_m, R0, confidence_interval, fPrint, g
             fprintf('\n');
             fprintf('a: %g\tb: %g\tc: %g\n', a,b,c);
             fprintf('a1: %g\tb1: %g\tc1: %g\n', a1,b1,c1);
-            - a^2/2 - b^2/2 + c^2/2
-            - a^2/2 + b^2/2 - c^2/2
-            a^2/2 - b^2/2 - c^2/2
-            a^2/2 + b^2/2 + c^2/2
+%             - a^2/2 - b^2/2 + c^2/2
+%             - a^2/2 + b^2/2 - c^2/2
+%             a^2/2 - b^2/2 - c^2/2
+%             a^2/2 + b^2/2 + c^2/2
         end
         % Calculating the radius of a sphere circumscribing a tetrahedron using the Cayley-Menger determinant
         R_Cayley_Menger = SphereRadius_Cayley_Menger(a, b, c, a1 , b1, c1);

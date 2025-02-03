@@ -2,7 +2,7 @@
 function adjA = adjointMatrix(A)
     % Checking if a matrix is square
     [n, m] = size(A);
-    assert(n == m, 'Матрица должна быть квадратной');
+    assert(n == m, 'The matrix must be square');
 
     % Initialize the attached matrix
     adjA = zeros(n);

@@ -37,7 +37,8 @@ optim_sphere.m - Determining the optimal configuration of "n" points on a sphere
 optim_sphere_fun.m - Minimized functional for determining the optimal configuration 
                      of "n" points on a sphere
 
-optimal_n_points_on_sphere.m - Calculation of optimal coordinates of n points on a sphere of radius r
+optimal_n_points_on_sphere.m, optimal_n_points_on_sphere_fix.m - Calculation of optimal 
+                                                                 coordinates of n points on a sphere of radius r
 
 paint.m - Display the surface of a sphere with points on it
 
@@ -65,3 +66,7 @@ SphereRadiusFromDistance.m - Function to call in Monte Carlo tests
 SphereRadiusTest.m - Main function for experiments
 
 sumith_fit.m - Calculating the radius of a sphere using Sumith YD method
+
+IsFloatEqualRelative.m - Function for comparing (normalized) numbers with relative error maxRelDiff
+kahanSumMatrix.m, kahanSumIterative.m - Kahan summation
+

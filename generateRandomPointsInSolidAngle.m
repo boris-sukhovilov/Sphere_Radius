@@ -1,13 +1,13 @@
 function points = generateRandomPointsInSolidAngle(R, numPoints, phiRange, thetaRange, sigma_m)
     % R - sphere radius
     % numPoints - number of points to generate
-    % phiRange - phi angle range [phi_min, phi_max]
-    % thetaRange - theta angle range [theta_min, theta_max]
+    % phiRange - phi angle range [phi_min, phi_max] (azimuth angle)
+    % thetaRange - theta angle range [theta_min, theta_max] (polar angle)
     % sigma_form - standard deviation from sphere shape
 
     % Generate random angles in given ranges
-    phi = phiRange(1) + (phiRange(2) - phiRange(1)) * rand(numPoints, 1); % ”гол в плоскости XY
-    theta = acos(cos(thetaRange(1)) + (cos(thetaRange(2)) - cos(thetaRange(1))) * rand(numPoints, 1)); % ”гол от оси Z
+    phi = phiRange(1) + (phiRange(2) - phiRange(1)) * rand(numPoints, 1); % azimuth angle
+    theta = acos(cos(thetaRange(1)) + (cos(thetaRange(2)) - cos(thetaRange(1))) * rand(numPoints, 1)); % polar angle 
 
     % Transformation of spherical coordinates to Cartesian
     x = R * sin(theta) .* cos(phi);

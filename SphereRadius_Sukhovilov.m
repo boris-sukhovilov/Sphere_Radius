@@ -1,5 +1,7 @@
 % ----------------------------------------------------------------------
 % Estimate of the sphere radius
+% Boris Sukhovilov, boris.sukhovilov@gmail.com
+% Copyright (c) 1980-2025
 % 
 % Input:
 % S - matrix of measured pairwise distances
@@ -25,15 +27,16 @@ function [R, sigma_R] = SphereRadius_Sukhovilov(S, sigma, sigma_m, R0, confidenc
     % Final rank of matrix S2
     [rank_S2_final, tol, singular_values] = final_rank(S2, rank_S2_0, sigma, sigma_m, R0, confidence_interval, fPrint);
     
-    if fPrint == 1
-        fprintf('\tFinal rank S2: %d\n', rank_S2_final);
-        for i = 1 : 4
-            fprintf('\t%1d\tTotal error: %8.3e \t singular value: %8.3e\n', i, tol(i), singular_values(i));
-        end
-    end
+%    if fPrint == 1
+%        fprintf('\tFinal rank S2: %d\n', rank_S2_final);
+%        for i = 1 : 4
+%            fprintf('\t%1d\tTotal error: %8.3e \t singular value: %8.3e\n', i, tol(i), singular_values(i));
+%        end
+%    end
     
     S2_pinv = pseudo_inv(S2, rank_S2_final);
-    R = 1 / sqrt(sum(sum(S2_pinv)));
+%     R = 1 / sqrt(sum(sum(S2_pinv)));
+    R = 1 / sqrt(kahanSumMatrix(S2_pinv));
     b = ones(size(S2,1),1);
     x = S2_pinv*b;
     sigma_R = rmse(R, S2, x, sigma, sigma_m);

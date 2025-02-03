@@ -5,6 +5,9 @@ function [R_N_max, R_N_mean, R_N_sigma] = MonteKarloTest( ...
     NTEST, R, numPoints, sigma, sigma_m, R0, confidence_interval, ...
     phiRange, thetaRange, h, beta, generate_type, fPrint)
 
+
+    compensation_mean = 0;
+    compensation_sigma = 0;
     for i = 1 : NTEST
         R_N = SphereRadiusFromDistance(R, numPoints, sigma, sigma_m, R0, confidence_interval, ...
               phiRange, thetaRange, h, beta, generate_type, fPrint);
@@ -26,8 +29,11 @@ function [R_N_max, R_N_mean, R_N_sigma] = MonteKarloTest( ...
             if d > R_N_max(j)
                 R_N_max(j) = d;
             end
-            R_N_mean(j) = R_N_mean(j) + d;
-            R_N_sigma(j) = R_N_sigma(j) + d^2;
+            
+%             R_N_mean(j) = R_N_mean(j) + d;
+            [R_N_mean(j), compensation_mean] = kahanSumIterative(R_N_mean(j), compensation_mean, d);
+%             R_N_sigma(j) = R_N_sigma(j) + d^2;
+            [R_N_sigma(j), compensation_sigma] = kahanSumIterative(R_N_sigma(j), compensation_sigma, d^2);            
         end
     end
     

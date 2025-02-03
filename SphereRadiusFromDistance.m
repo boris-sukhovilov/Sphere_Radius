@@ -33,7 +33,16 @@ function R_N = SphereRadiusFromDistance(R, numPoints, sigma, sigma_m, R0, confid
         % 3 - the simplex is optimal coordinates of n points on a sphere of radius r,
         %     providing the minimum root mean square deviation of the radius estimate
         
-        points = optimal_n_points_on_sphere(R, numPoints, sigma, sigma_m);
+%         points = optimal_n_points_on_sphere(R, numPoints, sigma, sigma_m);
+
+        while 1
+            [points, exitflag] = optimal_n_points_on_sphere_fix(R, numPoints, sigma, sigma_m);
+            if exitflag == 1
+                break;
+            else
+%                 exitflag
+            end
+        end
         
     elseif generate_type == 4
         % 4 - The simplex of points is divided into two groups of points:
@@ -45,6 +54,12 @@ function R_N = SphereRadiusFromDistance(R, numPoints, sigma, sigma_m, R0, confid
         
         h = R*cos(thetaRange(2));
         points1 = generate_sphere_points_on_isosceles_pyramid(4, R, h, sigma_m);
+        
+        % Move one of the points from the south pole to the north pole
+%         if IsFloatEqualRelative(thetaRange(2), pi, 0.01)
+%             points1(:, 2) = [points1(1, 2); points1(2, 2); -points1(3, 2)];
+%         end
+        
         if numPoints > 4
             points2 = generateRandomPointsInSolidAngle(R, numPoints-4, phiRange, thetaRange, sigma_m);
         else
@@ -54,24 +69,29 @@ function R_N = SphereRadiusFromDistance(R, numPoints, sigma, sigma_m, R0, confid
         
     end
     
-    % Generating a distance matrix
-    [S, ~] = generateMatrixDistance(points, sigma);
+    if generate_type >=0 && generate_type <=4
+        % Generating a distance matrix
+        [S, ~] = generateMatrixDistance(points, sigma);
+    end
 
-%     % Tennis Ball Experiment
-%     fPrint = 1;
-%     R0 = 65;
-%     delta = 10;
-%     delta_m = 10;
-%     sigma = delta/3;
-%     sigma_m  = delta_m/3;
-%     S = zeros(4,4);
-%     S(1,2) = 41.5;
-%     S(1,3) = 59.;
-%     S(1,4) = 56.9;
-%     S(2,3) = 57.8;
-%     S(2,4) = 51.;
-%     S(3,4) = 43.;
-%     S = S + S';
+    if generate_type == 5
+        % Tennis Ball Experiment
+        fPrint = 1;
+        
+        R0 = 65;
+        delta = 10;
+        delta_m = 10;
+        sigma = delta/3;
+        sigma_m  = delta_m/3;
+        S = zeros(4,4);
+        S(1,2) = 41.5;
+        S(1,3) = 59.;
+        S(1,4) = 56.9;
+        S(2,3) = 57.8;
+        S(2,4) = 51.;
+        S(3,4) = 43.;
+        S = S + S';
+    end
     
     % Calculate radius by all methods
     R_N = calc_Radius(S, sigma, sigma_m, R0, confidence_interval, fPrint, generate_type);

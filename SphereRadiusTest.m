@@ -3,6 +3,9 @@
 % -----------------------------------------------
 function SphereRadiusTest()
     clc
+    
+    format short g
+    
     rng('shuffle');
 
     R = 1000;
@@ -48,8 +51,8 @@ function SphereRadiusTest()
     %  ! Assign the type of point generation on the sphere - Simplex type !
     % 
     % ========================================================================
-    %  generate_type == 0,1,2 - We do not use these methods in Monte Carlo tests.       
-    generate_type = 3;
+    %  generate_type == 0,1,2,5 - We do not use these methods in Monte Carlo tests.       
+    generate_type = 4;
     
     % ----------------------------------------------------------------------------------------    
     % 0 - the simplex is composed of points located on a part of a sphere 
@@ -61,7 +64,7 @@ function SphereRadiusTest()
     beta = pi / 2;
     % Distance from the center of the sphere to the horizontal planes, locations of points
     h = R*0.98;
-    if fPrint == 1
+    if fPrint == 1 && generate_type == 1
         fprintf('Angle between diametrical planes:%g\n', beta*180/pi);
         fprintf('Distance from the center of the sphere to the horizontal planes, locations of points:%g\n', h);
     end
@@ -78,9 +81,12 @@ function SphereRadiusTest()
     % 2) the remaining points are located uniformly randomly in the given ranges 
     %    of azimuth and polar angles
     % ----------------------------------------------------------------------------------------    
+    % 5 - Tennis Ball Experiment
+    % ----------------------------------------------------------------------------------------    
     
     if generate_type == 3
         
+%         numPoints_test = [4 5];
         numPoints_test = [4, 5, 10, 20, 50];
         thetaRange = [0 pi];
         
@@ -101,23 +107,37 @@ function SphereRadiusTest()
             R_N_mean_mat{nPoints, 1} = R_N_mean;
             R_N_sigma_mat{nPoints, 1} = R_N_sigma;
             
+            R_N_max_Points = cell2mat(R_N_max_mat);
+            R_N_mean_Points = cell2mat(R_N_mean_mat);
+            R_N_sigma_Points = cell2mat(R_N_sigma_mat);
+            
+            R_N_max_Points = R_N_max_Points(:, method_id);
+            R_N_mean_Points = R_N_mean_Points(:, method_id);
+            R_N_sigma_Points = R_N_sigma_Points(:, method_id);
+            
+            fprintf('thetaRange: [%g %g]\n', thetaRange*180/pi);
+%             disp('R_N_max_Points:'), disp(R_N_max_Points)
+            disp('R_N_mean_Points:'), disp(R_N_mean_Points)
+            % disp('R_N_sigma_Points:'), disp(R_N_sigma_Points)
+            
         end
         
-        R_N_max_Points = cell2mat(R_N_max_mat);
-        R_N_mean_Points = cell2mat(R_N_mean_mat);
-        R_N_sigma_Points = cell2mat(R_N_sigma_mat);
-        
-        R_N_max_Points = R_N_max_Points(:, method_id);
-        R_N_mean_Points = R_N_mean_Points(:, method_id);
-        R_N_sigma_Points = R_N_sigma_Points(:, method_id);
-        
-        fprintf('thetaRange: [%g %g]\n', thetaRange*180/pi);
-        % disp('R_N_max_Points:'), disp(R_N_max_Points)
-        disp('R_N_mean_Points:'), disp(R_N_mean_Points)
-        % disp('R_N_sigma_Points:'), disp(R_N_sigma_Points)
+%         R_N_max_Points = cell2mat(R_N_max_mat);
+%         R_N_mean_Points = cell2mat(R_N_mean_mat);
+%         R_N_sigma_Points = cell2mat(R_N_sigma_mat);
+%         
+%         R_N_max_Points = R_N_max_Points(:, method_id);
+%         R_N_mean_Points = R_N_mean_Points(:, method_id);
+%         R_N_sigma_Points = R_N_sigma_Points(:, method_id);
+%         
+%         fprintf('thetaRange: [%g %g]\n', thetaRange*180/pi);
+%         % disp('R_N_max_Points:'), disp(R_N_max_Points)
+%         disp('R_N_mean_Points:'), disp(R_N_mean_Points)
+%         % disp('R_N_sigma_Points:'), disp(R_N_sigma_Points)
         
     elseif generate_type == 4
         
+%         numPoints_test = [4, 5, 10];
         numPoints_test = [4, 5, 10, 20, 50, 100];
 %         thetaRange2_test = [pi/4, pi/2, 2*pi/3, pi-pi*5/180];
         thetaRange2_test = [pi/4, pi/2, 2*pi/3, pi];
@@ -158,8 +178,8 @@ function SphereRadiusTest()
             
         end
         
-    %  generate_type == 0,1,2 - We do not use these methods in Monte Carlo tests.       
-    elseif generate_type == 0
+    %  generate_type == 0,1,2,5 - We do not use these methods in Monte Carlo tests.       
+    elseif generate_type == 0 || generate_type == 1 || generate_type == 5
         
         fPrint=1;
         NTEST = 1;
@@ -169,16 +189,6 @@ function SphereRadiusTest()
             NTEST, R, numPoints, sigma, sigma_m, R0, confidence_interval, ...
             phiRange, thetaRange, h, beta, generate_type, fPrint);        
         
-    elseif generate_type == 1
-        
-        fPrint=1;
-        NTEST = 1;
-        numPoints = 4;
-        
-        [R_N_max, R_N_mean, R_N_sigma] = MonteKarloTest( ...
-            NTEST, R, numPoints, sigma, sigma_m, R0, confidence_interval, ...
-            phiRange, thetaRange, h, beta, generate_type, fPrint);
-
     elseif generate_type == 2
         
         fPrint=1;

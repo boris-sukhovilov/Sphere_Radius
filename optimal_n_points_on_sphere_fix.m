@@ -8,7 +8,7 @@
 % sigma - RMSE of distance measurement
 % sigma_m - RMSE of the sphere shape
 % ----------------------------------------------------------------------------
-function points = optimal_n_points_on_sphere(r, n, sigma, sigma_m)
+function [points, exitflag] = optimal_n_points_on_sphere_fix(r, n, sigma, sigma_m)
     % Let's remove extra degrees of freedom of the system of points placed on the sphere 
     % by fixing the sphere in some coordinate system.
     % Let's fix the sphere with points in some coordinate system.
@@ -22,11 +22,53 @@ function points = optimal_n_points_on_sphere(r, n, sigma, sigma_m)
     % Number of angles involved in optimization
     len_angels = 2*n - 3;
     % The initial values of the angles are assigned randomly
-    angels = 2*pi*rand(1, len_angels);
+%     angels = 2*pi*rand(1, len_angels);
+
+% % Fixing the sphere
+% fi_(1)=0;
+% teta_(1)=0;
+% fi_(2)=0;
+% teta_(2)=angels(1);
+
+    alfa = pi/3;
+     % polar angle 
+    theta0 = acos(cos(alfa) + (cos(pi-alfa) - cos(alfa)) * rand);
+
+
+    % teta_(2)=angels(1);
+%     angels(1) = pi/2;
+    angels(1) = theta0;
+    % fi_(3)=0;
+    angels(2) = 2*pi/3;
+    % teta_(3)=0;
+%     angels(3) = pi/2;
+    angels(3) = theta0;
+    % fi_(4)=0;
+    angels(4) = 4*pi/3;
+    % teta_(4)=angels(1);
+%     angels(5) = pi/2;
+    angels(5) = theta0;
     
-%     % Generate random angles in given ranges
-%     phi = phiRange(1) + (phiRange(2) - phiRange(1)) * rand(numPoints, 1); % ”гол в плоскости XY
-%     theta = acos(cos(thetaRange(1)) + (cos(thetaRange(2)) - cos(thetaRange(1))) * rand(numPoints, 1)); % ”гол от оси Z
+    num_rand_generate = (len_angels - 5)/2;
+    
+    % Generate random angles in given ranges
+    phiRange = [0 2*pi];
+     % azimuth angle
+    phi = phiRange(1) + (phiRange(2) - phiRange(1)) * rand(num_rand_generate, 1);
+    thetaRange = [0 pi];
+     % polar angle 
+    theta = acos(cos(thetaRange(1)) + (cos(thetaRange(2)) - cos(thetaRange(1))) * rand(num_rand_generate, 1));
+   
+    j = 5;
+    for i = 1 : num_rand_generate
+        j = j + 1;
+        % fi angle
+        angels(j) = phi(i);
+        % teta angle
+        j = j +1;
+        angels(j) = theta(i);
+    end
+    
 
     TolX = eps(r);
     TolFun = eps(r);

@@ -24,4 +24,7 @@ function [rank_S2, tol, singular_values] = final_rank(S2, rank_S2_0, sigma, sigm
     tol = confidence_interval*sigma_lambda + tol_0;
 
     rank_S2 = min([sum(singular_values > tol), rank_S2_0]);
+    if rank_S2 < 2
+        rank_S2 = 2;
+    end
 end
