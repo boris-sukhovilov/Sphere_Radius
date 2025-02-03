@@ -68,5 +68,5 @@ SphereRadiusTest.m - Main function for experiments
 sumith_fit.m - Calculating the radius of a sphere using Sumith YD method
 
 IsFloatEqualRelative.m - Function for comparing (normalized) numbers with relative error maxRelDiff
-kahanSumMatrix.m, kahanSumIterative.m - Kahan summation
 
+kahanSumMatrix.m, kahanSumIterative.m - Kahan summation
