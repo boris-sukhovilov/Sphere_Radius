@@ -4,8 +4,8 @@
 % Input
 % angels - vector of azimuthal and polar angles of points on the sphere
 % r - radius of the sphere
-% sigma - RMSE of distance measurement
-% sigma_m - RMSE of the sphere shape
+% sigma - STD of distance measurement
+% sigma_m - STD of the sphere shape
 %
 % Output
 % f - variance to be minimized

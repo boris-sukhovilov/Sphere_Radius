@@ -32,9 +32,9 @@ function SphereRadiusTest()
     delta = 3;
     delta_m = 3;
     
-    % RMSE of distance measurement
+    % STD of distance measurement
     sigma  = delta/3.;
-    % RMSE of the sphere shape
+    % STD of the sphere shape
     sigma_m  = delta_m/3.;
     
     % Azimuth angle range measured in the horizontal plane
@@ -86,8 +86,8 @@ function SphereRadiusTest()
     
     if generate_type == 3
         
-%         numPoints_test = [4 5];
-        numPoints_test = [4, 5, 10, 20, 50];
+        numPoints_test = [4 5];
+%         numPoints_test = [4, 5, 10, 20, 50];
         thetaRange = [0 pi];
         
         method_id = [1 2 3 4 11 12 13];        
@@ -186,8 +186,8 @@ function SphereRadiusTest()
             phiRange, thetaRange, h, beta, generate_type, fPrint);        
     end
     
-%     % RMSE of R for optimal placement of points on the entire surface of the sphere
+%     % STD of R for optimal placement of points on the entire surface of the sphere
 %     sigma_Optim = sqrt(sigma^2/(2*numPoints^2)+sigma_m^2/numPoints);
-%     fprintf('RMSE of R for optimal placement of points: %g\n\n', sigma_Optim);
+%     fprintf('STD of R for optimal placement of points: %g\n\n', sigma_Optim);
 
 end

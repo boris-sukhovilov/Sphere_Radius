@@ -10,7 +10,7 @@ function R_N = calc_Radius(S, sigma, sigma_m, R0, confidence_interval, fPrint, g
     [R1, sigma_R] = SphereRadius_Sukhovilov(S, sigma, sigma_m, R0, confidence_interval, fPrint);
     if fPrint == 1
         fprintf('Our Method: (Sukhovilov B.)\n');
-        fprintf('\tRadius= %g\tRMSE of R1: %g\n', R1, sigma_R);
+        fprintf('\tRadius= %g\tSTD of R1: %g\n', R1, sigma_R);
     end
         
     % Initial approximations for point coordinates

@@ -3,8 +3,8 @@
 % 
 % S2- measured matrix of half-squared distances
 % rank_S2_0 - initial rank of the measured matrix of half-squared distances
-% sigma - RMSE distance measurement errors
-% sigma_m - RMSE random deviations of the sphere shape
+% sigma - STD distance measurement errors
+% sigma_m - STD random deviations of the sphere shape
 % R0 - Approximate value of the estimated radius.
 %      Participates in the calculation of 
 %      the final rank of the measured matrix of half-squared distances
@@ -15,7 +15,7 @@ function [rank_S2, tol, singular_values] = final_rank(S2, rank_S2_0, sigma, sigm
     singular_values = svd(S2)';    
     singular_values = singular_values(1:rank_S2_0);
     
-    % RMSE of eigenvalues of matrix S2 caused by distance measurement errors and random deviations of the sphere shape
+    % STD of eigenvalues of matrix S2 caused by distance measurement errors and random deviations of the sphere shape
     sigma_lambda = sigma_eigenvalues(S2, sigma, sigma_m, R0, fPrint);
     
     % Contribution of computational error

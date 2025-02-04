@@ -5,8 +5,8 @@
 % 
 % Input:
 % S - matrix of measured pairwise distances
-% sigma - RMSE distance measurement errors
-% sigma_m - RMSE random deviations of the sphere shape
+% sigma - STD distance measurement errors
+% sigma_m - STD random deviations of the sphere shape
 % R0 - Approximate value of the estimated radius.
 %      Participates in the calculation of 
 %      the final rank of the measured matrix of half-squared distances
@@ -16,7 +16,7 @@
 % Output:
 % R - estimate of the sphere radius
 %     R = 1 / sqrt(sum(sum(pinv(S2))));
-% sigma_R - RMSE of radius R
+% sigma_R - STD of radius R
 % ----------------------------------------------------------------------
 function [R, sigma_R] = SphereRadius_Sukhovilov(S, sigma, sigma_m, R0, confidence_interval, fPrint)
     % Construction of the measured matrix of half-squared distances
@@ -39,17 +39,17 @@ function [R, sigma_R] = SphereRadius_Sukhovilov(S, sigma, sigma_m, R0, confidenc
     R = 1 / sqrt(kahanSumMatrix(S2_pinv));
     b = ones(size(S2,1),1);
     x = S2_pinv*b;
-    sigma_R = rmse(R, S2, x, sigma, sigma_m);
+    sigma_R = STD_R(R, S2, x, sigma, sigma_m);
 end
 
 % ----------------------------------------------------------------------
-% sigma_R - RMSE of radius R
+% sigma_R - STD of radius R
 % ----------------------------------------------------------------------
-function sigma_R = rmse(R, S2, x, sigma, sigma_m)
+function sigma_R = STD_R(R, S2, x, sigma, sigma_m)
     % the component of dispersion (1/R^2) caused by errors in distance measurement
     d=(2*sigma^2)*((x.^2)'*S2*(x.^2)); 
     % component of variance (1/R^2) due to model errors
     d=d+4*sigma_m^2*x'*x/R^2;
-    % root mean square error (RMSE) R
+    % root mean square error (STD) R
     sigma_R=0.5*(R^3)*sqrt(d);
 end

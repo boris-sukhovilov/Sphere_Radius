@@ -5,8 +5,8 @@
 % r - sphere radius
 % n - number of points on a sphere
 % points - matrix vectors of coordinates points on a sphere (size 3 x n)
-% sigma - RMSE of distance measurement
-% sigma_m - RMSE of the sphere shape
+% sigma - STD of distance measurement
+% sigma_m - STD of the sphere shape
 % ----------------------------------------------------------------------------
 function points = optimal_n_points_on_sphere(r, n, sigma, sigma_m)
     % Let's remove extra degrees of freedom of the system of points placed on the sphere 

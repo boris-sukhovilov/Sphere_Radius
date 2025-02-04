@@ -23,9 +23,9 @@ r=1;
 % Number of points on a sphere
 n = 5;
 
-% RMSE of distance measurement
+% STD of distance measurement
 sigma = 0.01;
-% RMSE of the sphere shape
+% STD of the sphere shape
 sigma_m = 0.01;
 
 % Number of angles involved in optimization
