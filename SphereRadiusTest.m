@@ -122,24 +122,9 @@ function SphereRadiusTest()
             
         end
         
-%         R_N_max_Points = cell2mat(R_N_max_mat);
-%         R_N_mean_Points = cell2mat(R_N_mean_mat);
-%         R_N_sigma_Points = cell2mat(R_N_sigma_mat);
-%         
-%         R_N_max_Points = R_N_max_Points(:, method_id);
-%         R_N_mean_Points = R_N_mean_Points(:, method_id);
-%         R_N_sigma_Points = R_N_sigma_Points(:, method_id);
-%         
-%         fprintf('thetaRange: [%g %g]\n', thetaRange*180/pi);
-%         % disp('R_N_max_Points:'), disp(R_N_max_Points)
-%         disp('R_N_mean_Points:'), disp(R_N_mean_Points)
-%         % disp('R_N_sigma_Points:'), disp(R_N_sigma_Points)
-        
     elseif generate_type == 4
         
-%         numPoints_test = [4, 5, 10];
         numPoints_test = [4, 5, 10, 20, 50, 100];
-%         thetaRange2_test = [pi/4, pi/2, 2*pi/3, pi-pi*5/180];
         thetaRange2_test = [pi/4, pi/2, 2*pi/3, pi];
         
         method_id = [1 2 3 11 12 13];
