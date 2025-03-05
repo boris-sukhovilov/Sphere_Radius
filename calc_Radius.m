@@ -40,7 +40,11 @@ function R_N = calc_Radius(S, sigma, sigma_m, R0, confidence_interval, fPrint, g
     
     if (generate_type == 1 || generate_type == 3)
         R_opt = radius_optimal_n_points_on_sphere(S);
-%         R_opt = estimateR(S, sigma);
+        
+%         R_opt2 = estimateR(S, sigma);
+%         R_opt3 = estimate_R(S, sigma);
+%         fprintf('R_opt2:%g\tR_opt3:%g\n', R_opt2, R_opt3);
+        
         R_N(4) = R_opt;
         if fPrint == 1
             fprintf('Our Method: Sphere radius for optimal placement of %d points= %g\n', numPoints, R_opt);

@@ -46,7 +46,7 @@ end
 % sigma_R - STD of radius R
 % ----------------------------------------------------------------------
 function sigma_R = STD_R(R, S2, x, sigma, sigma_m)
-    % the component of dispersion (1/R^2) caused by errors in distance measurement
+    % the component of variance (1/R^2) caused by errors in distance measurement
     d=(2*sigma^2)*((x.^2)'*S2*(x.^2)); 
     % component of variance (1/R^2) due to model errors
     d=d+4*sigma_m^2*x'*x/R^2;

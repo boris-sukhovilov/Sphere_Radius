@@ -17,6 +17,7 @@ function [rank_S2, tol, singular_values] = final_rank(S2, rank_S2_0, sigma, sigm
     
     % STD of eigenvalues of matrix S2 caused by distance measurement errors and random deviations of the sphere shape
     sigma_lambda = sigma_eigenvalues(S2, sigma, sigma_m, R0, fPrint);
+%     sigma_lambda
     
     % Contribution of computational error
     tol_0 = max(size(S2)) * eps(max(singular_values));

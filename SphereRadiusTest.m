@@ -21,7 +21,7 @@ function SphereRadiusTest()
     fPrint = 0;
 
     % number of tests
-    NTEST = 500;
+    NTEST = 100;
     
     % number of points
     % numPoints = 4;
@@ -52,7 +52,7 @@ function SphereRadiusTest()
     % 
     % ========================================================================
     %  generate_type == 0,1,2,5 - We do not use these methods in Monte Carlo tests.       
-    generate_type = 4;
+    generate_type = 3;
     
     % ----------------------------------------------------------------------------------------    
     % 0 - the simplex is composed of points located on a part of a sphere 
@@ -86,7 +86,7 @@ function SphereRadiusTest()
     
     if generate_type == 3
         
-        numPoints_test = [4 5];
+        numPoints_test = [4 5 10 20];
 %         numPoints_test = [4, 5, 10, 20, 50];
         thetaRange = [0 pi];
         
