@@ -51,7 +51,7 @@ regular_polyhedron.m - Calculation sphere radius for platonic solids
 sensitivity_matrix.m - Calculation of the sensitivity matrix for the solution R from the implicit equation: 
                        f(R) = det(R^2*ones(n)-S.*S/2) = 0
 
-sigma_eigenvalues.m - Ñalculation of the RMSE of the eigenvalues of the matrix of half squares of pairwise distances
+sigma_eigenvalues.m - Calculating the standard deviation of the eigenvalues of the matrix of half-squared pairwise distances
 
 SphereRadius_Carnot.m - Calculating the radius of a sphere circumscribing a tetrahedron using the Carnot method
 
