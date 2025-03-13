@@ -15,14 +15,18 @@
 function Earth_radius()
     clc
     
-    % STD of distance measurement (km)
+    % STD of arc distance measurement (km)
     sigma = 10/3;
+    % STD of linear distance measurement: sigma_s = cos(L(i,j)/(2*R))*sigma
+    % When "2*R" is much greater than "L(i,j)" -> cos(L(i,j)/(2*R)) -> 1
+    % and sigma_s -> sigma
+    
     % STD of the sphere shape (km)
     sigma_m = 10/3;
     % Initial approximation Earth radius (km)
     R0 = 6000;
 
-    % flight distances
+    % flight distances (arc distance measurement)
     s = ...
        [0      8397   7712    11332   11258   3639   12454
         0      0      7501    4341    13348   7017   14485
@@ -38,9 +42,10 @@ function Earth_radius()
     b = ones(n,1);
     
     for i = 4 : n
-        S = s(1:i,1:i);
+        L = s(1:i,1:i);
         B = b(1:i,:);
-        [R, ~]=fzero(@(r) (2-B'*pseudo_inv((sin(S./(2*r))).^2, 4)*B), R0);
+        [R, ~]=fzero(@(r) (2-B'*pseudo_inv((sin(L./(2*r))).^2, 4)*B), R0);
+        S = 2*R*sin(L./(2*R));
         sigma_R = STD_R(R, S, sigma, sigma_m);
         fprintf('Earth radius by %d points: %g\tSTD R: %g\n', i, R, sigma_R);
     end
