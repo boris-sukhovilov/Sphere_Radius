@@ -3,7 +3,7 @@
 %  -----------------------------------------------------------
 %
 % https://www.travelmath.com/ (22.01.25)	
-%         Seattle	    Moscow	Tokyo	Delhi	Montevideo	    Anchorage	    Sydney
+%         Seattle       Moscow  Tokyo   Delhi   Montevideo      Anchorage       Sydney
 % Seattle 0             8397    7712    11332   11258           3639            12454
 % Moscow                0       7501    4341    13348           7017            14485
 % Tokyo                         0       5850    18576           5572            7792
