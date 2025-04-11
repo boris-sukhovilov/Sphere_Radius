@@ -2,6 +2,8 @@
 % Estimate of the sphere radius
 % Boris Sukhovilov, boris.sukhovilov@gmail.com
 % Copyright (c) 1980-2025
+%--please cite as Boris Sukhovilov, "Determining Sphere Radius through Pairwise Distances", arXiv:2504.02334
+% https://arxiv.org/pdf/2504.02334
 % 
 % Input:
 % S - matrix of measured pairwise distances
