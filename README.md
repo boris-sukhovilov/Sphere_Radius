@@ -71,3 +71,16 @@ IsFloatEqualRelative.m - Function for comparing (normalized) numbers with relati
 
 kahanSumMatrix.m, kahanSumIterative.m - Kahan summation
 
+## Citations
+
+@article{sukhovilov2025determiningsphereradiuspairwise,
+         title={Determining Sphere Radius through Pairwise Distances}, 
+         author={Boris Sukhovilov},
+         year={2025},
+         eprint={2504.02334},
+         archivePrefix={arXiv},
+         primaryClass={cs.CG},
+         url={https://arxiv.org/abs/2504.02334}, 
+}
+
+[Boris Sukhovilov. Determining Sphere Radius through Pairwise Distances](https://arxiv.org/abs/2504.02334)
