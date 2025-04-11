@@ -74,7 +74,10 @@ kahanSumMatrix.m, kahanSumIterative.m - Kahan summation
 ## Citations
 
 If you are interested in the scientific or methodological basis of the project, you can read the sources below:
-{
+
+Boris Sukhovilov [Determining Sphere Radius through Pairwise Distances](https://arxiv.org/abs/2504.02334)
+
+```bibtex
 @article{sukhovilov2025determiningsphereradiuspairwise,
          title={Determining Sphere Radius through Pairwise Distances}, 
          author={Boris Sukhovilov},
@@ -84,5 +87,3 @@ If you are interested in the scientific or methodological basis of the project, 
          primaryClass={cs.CG},
          url={https://arxiv.org/abs/2504.02334}, 
 }
-}
-Boris Sukhovilov [Determining Sphere Radius through Pairwise Distances](https://arxiv.org/abs/2504.02334)
